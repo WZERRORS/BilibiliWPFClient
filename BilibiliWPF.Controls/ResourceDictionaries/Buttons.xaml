@@ -1,0 +1,263 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:muxc="http://schemas.modernwpf.com/2019"
+                    xmlns:primitives="clr-namespace:ModernWpf.Controls.Primitives;assembly=ModernWpf"
+                    xmlns:biliwpf="clr-namespace:XamlGeneratedNamespace"
+                    xmlns:helpers="clr-namespace:BiliWpf.Controls.Helpers"
+                    xmlns:brushes="clr-namespace:BiliWpf.Controls.Brushes">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/ModernWpf;component/Styles/Button.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="AnimatedButtonStyle"
+           TargetType="ButtonBase">
+        <Setter Property="Padding"
+                Value="0" />
+        <Setter Property="IsTabStop"
+                Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ButtonBase">
+                    <Grid Background="{TemplateBinding Background}"
+                          x:Name="controlRoot"
+                          IsEnabled="{TemplateBinding IsEnabled}">
+                        <Border Background="{TemplateBinding helpers:ButtonHelper.MouseHoverColor}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                x:Name="mouseSuspendFilter"
+                                Opacity="0" />
+                        <ContentPresenter Content="{TemplateBinding Content}" />
+                        <Border Background="Transparent"
+                                x:Name="mousePressFilter" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="mouseSuspendFilter"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     From="0.0"
+                                                     To="1.0"
+                                                     Duration="0:0:0.1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="mouseSuspendFilter"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     From="1.0"
+                                                     To="0.0"
+                                                     Duration="0:0:0.25" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter TargetName="mousePressFilter"
+                                    Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="#2000" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="WindowCaptionButtonStyle"
+           TargetType="ButtonBase"
+           BasedOn="{StaticResource AnimatedButtonStyle}">
+        <Setter Property="Margin"
+                Value="1,0,0,0" />
+        <Setter Property="WindowChrome.IsHitTestVisibleInChrome"
+                Value="True" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ButtonBase">
+                    <Grid Background="Transparent"
+                          x:Name="controlRoot"
+                          IsEnabled="{TemplateBinding IsEnabled}">
+                        <Border Background="{TemplateBinding helpers:ButtonHelper.MouseHoverColor}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                x:Name="mouseSuspendFilter"
+                                Opacity="0" />
+                        <ContentPresenter Content="{TemplateBinding Content}" />
+                        <Viewbox Width="10"
+                                 Height="10">
+                            <Path Fill="{TemplateBinding Foreground}"
+                                  x:Name="captionSymbol"
+                                  Data="{TemplateBinding helpers:ButtonHelper.CaptionSymbol}" />
+                        </Viewbox>
+                        <Border Background="Transparent"
+                                x:Name="mousePressFilter" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="mouseSuspendFilter"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     From="0.0"
+                                                     To="1.0"
+                                                     Duration="0:0:0.1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="mouseSuspendFilter"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     From="1.0"
+                                                     To="0.0"
+                                                     Duration="0:0:0.25" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter TargetName="captionSymbol"
+                                    Property="Fill">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="#FCCC" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter TargetName="mousePressFilter"
+                                    Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="#2000" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NavigateBackButtonStyle"
+           TargetType="Button"
+           BasedOn="{StaticResource AnimatedButtonStyle}">
+        <Setter Property="Width"
+                Value="48" />
+        <Setter Property="Height"
+                Value="30" />
+        <Setter Property="HorizontalAlignment"
+                Value="Left" />
+        <Setter Property="VerticalAlignment"
+                Value="Top" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Setter Property="helpers:ButtonHelper.MouseHoverColor"
+                Value="#19000000" />
+        <Setter Property="Background"
+                Value="{DynamicResource SystemControlBackgroundAccentBrush}" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Content">
+            <Setter.Value>
+                <Viewbox Width="12"
+                         Height="12">
+                    <muxc:SymbolIcon Symbol="Back"
+                                     x:Name="CaptionSymbol"
+                                     Foreground="{DynamicResource SystemControlBackgroundAltHighBrush}" />
+
+                </Viewbox>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="GlobalNavigationButtonStyle"
+           TargetType="ButtonBase"
+           BasedOn="{StaticResource AnimatedButtonStyle}">
+        
+    </Style>
+
+    <Style x:Key="MahAppButtonStyle" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
+        <Setter Property="primitives:ControlHelper.CornerRadius" Value="0" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Background"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding primitives:ControlHelper.CornerRadius}"
+                            SnapsToDevicePixels="True"
+                            RenderTransformOrigin="0.5,0">
+                        <Border x:Name="Border"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="{TemplateBinding primitives:ControlHelper.CornerRadius}">
+                            <ContentPresenter x:Name="ContentPresenter"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Focusable="False"
+                                              RecognizesAccessKey="True"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="Background"
+                                    Property="Background"
+                                    Value="{DynamicResource AccentButtonBackgroundPointerOver}" />
+                            <Setter TargetName="Border"
+                                    Property="BorderBrush"
+                                    Value="{DynamicResource AccentButtonBorderBrushPointerOver}" />
+                            <Setter TargetName="ContentPresenter"
+                                    Property="TextElement.Foreground"
+                                    Value="{DynamicResource AccentButtonForegroundPointerOver}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter TargetName="Background"
+                                    Property="RenderTransform">
+                                <Setter.Value>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleX="0.98"
+                                                        ScaleY="0.97" />
+                                    </TransformGroup>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Background"
+                                    Property="Background"
+                                    Value="{DynamicResource AccentButtonBackgroundPressed}" />
+                            <Setter TargetName="Border"
+                                    Property="BorderBrush"
+                                    Value="{DynamicResource AccentButtonBorderBrushPressed}" />
+                            <Setter TargetName="ContentPresenter"
+                                    Property="TextElement.Foreground"
+                                    Value="{DynamicResource AccentButtonForegroundPressed}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled"
+                                 Value="False">
+                            <Setter TargetName="Background"
+                                    Property="Background"
+                                    Value="{DynamicResource AccentButtonBackgroundDisabled}" />
+                            <Setter TargetName="Border"
+                                    Property="BorderBrush"
+                                    Value="{DynamicResource AccentButtonBorderBrushDisabled}" />
+                            <Setter TargetName="ContentPresenter"
+                                    Property="TextElement.Foreground"
+                                    Value="{DynamicResource AccentButtonForegroundDisabled}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

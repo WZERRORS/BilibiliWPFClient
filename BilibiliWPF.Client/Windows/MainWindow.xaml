@@ -1,0 +1,32 @@
+﻿<Window x:Class="BiliWpf.Client.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:windows="clr-namespace:BiliWpf.Client.Windows"
+        xmlns:usercontrols="clr-namespace:BiliWpf.Client.UserControls"
+        xmlns:muxc="http://schemas.modernwpf.com/2019"
+        muxc:ThemeManager.IsThemeAware="True"
+        muxc:ThemeManager.ActualThemeChanged="Window_ActualThemeChanged"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="720" Width="1080"
+        WindowStartupLocation="CenterScreen">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"
+                      GlassFrameThickness="0,1,0,0"
+                      UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+    <Window.Template>
+        <ControlTemplate>
+            <Grid x:Name="contentRoot">
+                <Border x:Name="backGroundBorderElement"
+                        Background="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
+                <usercontrols:PageRoot x:Name="navigationRoot" />
+                
+                <AdornerDecorator>
+                    <ContentPresenter />
+                </AdornerDecorator>
+            </Grid>
+        </ControlTemplate>
+    </Window.Template>
+</Window>

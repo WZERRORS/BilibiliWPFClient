@@ -1,0 +1,116 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:BiliWpf.Controls"
+                    xmlns:helpers="clr-namespace:BiliWpf.Controls.Helpers"
+                    xmlns:brushes="clr-namespace:BiliWpf.Controls.Brushes"
+                    xmlns:muxc="http://schemas.modernwpf.com/2019">
+    <Style x:Key="GlobalNavigationRadioButtonStyle"
+           TargetType="RadioButton">
+        <Setter Property="Foreground"
+                Value="{DynamicResource SystemControlForegroundBaseMediumHighBrush}" />
+        <Setter Property="Height"
+                Value="48" />
+        <Setter Property="IsTabStop"
+                Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Grid Background="Transparent"
+                          x:Name="ControlRoot"
+                          IsEnabled="{TemplateBinding IsEnabled}">
+                        <Border Background="{TemplateBinding helpers:ButtonHelper.MouseHoverColor}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                x:Name="mouseSuspendFilter"
+                                Opacity="0">
+                            <Border.BorderBrush>
+                                <brushes:RevealBorderBrush Color="Gray"
+                                                           Opacity="75"/>
+                            </Border.BorderBrush>
+                        </Border>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Viewbox Width="16"
+                                     Height="16"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"
+                                     Margin="0,0,2,2">
+                                <muxc:FontIcon FontFamily="Segoe MDL2 Assets"
+                                               Glyph="{TemplateBinding helpers:ButtonHelper.IconPath}"
+                                               Foreground="{TemplateBinding Foreground}" />
+                            </Viewbox>
+                            <TextBlock HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       Text="{TemplateBinding Content}"
+                                       Grid.Column="1"
+                                       Margin="10,0"
+                                       FontSize="14"
+                                       FontFamily="Source Sans Pro"/>
+                        </Grid>
+                        <Border Background="Transparent"
+                                x:Name="mousePressFilter" />
+                        <Border HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                x:Name="CheckBorderElement"
+                                Height="36"
+                                Width="4"
+                                Visibility="Hidden"
+                                Background="{DynamicResource SystemControlBackgroundAccentBrush}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="mouseSuspendFilter"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     From="0.0"
+                                                     To="1.0"
+                                                     Duration="0:0:0.1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="mouseSuspendFilter"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     From="1.0"
+                                                     To="0.0"
+                                                     Duration="0:0:0.25" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter TargetName="ControlRoot"
+                                    Property="RenderTransform">
+                                <Setter.Value>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleX="0.98"
+                                                        ScaleY="0.97" />
+                                    </TransformGroup>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="mousePressFilter"
+                                    Property="Background"
+                                    Value="{DynamicResource SystemControlBackgroundBaseLowBrush}">
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsChecked"
+                                 Value="True">
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource SystemControlForegroundAccentBrush}" />
+                            <Setter TargetName="CheckBorderElement"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
