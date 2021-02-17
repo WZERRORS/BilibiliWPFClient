@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="BiliWpf.Client.UserControls.PageRoot"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:muxc="http://schemas.modernwpf.com/2019"
+             xmlns:usercontrols="clr-namespace:BiliWpf.Client.UserControls"
+             xmlns:controls="clr-namespace:BiliWpf.Controls;assembly=BilibiliWPF.Controls"
+             xmlns:helpers="clr-namespace:BiliWpf.Controls.Helpers;assembly=BilibiliWPF.Controls"
+             xmlns:brushes="clr-namespace:BiliWpf.Controls.Brushes;assembly=BilibiliWPF.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="48" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <muxc:ThemeShadowChrome Grid.RowSpan="2"
+                                Grid.ColumnSpan="2"
+                                x:Name="navigationViewShadowChrome"
+                                Depth="0"
+                                HorizontalAlignment="Left">
+            <Border Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}">
+                <Grid Width="48"
+                      x:Name="navigationViewRoot"
+                      Background="{DynamicResource SystemControlBackgroundAltMediumLowBrush}"
+                      MouseEnter="NavigationView_MouseEnter"
+                      MouseLeave="NavigationView_MouseLeave">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="48" />
+                        <RowDefinition Height="200" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Button Style="{StaticResource NavigateBackButtonStyle}" />
+                    <Border Background="#19000000"
+                            VerticalAlignment="Bottom"
+                            Height="1" />
+
+                    <Button Grid.Row="1"
+                            Style="{StaticResource AnimatedButtonStyle}"
+                            helpers:ButtonHelper.MouseHoverColor="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                            BorderThickness="1"
+                            Width="48"
+                            HorizontalAlignment="Left"
+                            Background="Transparent"
+                            Click="NavigationViewMenu_Click">
+                        <Button.BorderBrush>
+                            <brushes:RevealBorderBrush Color="Gray"
+                                                       Opacity="75" />
+                        </Button.BorderBrush>
+                        <Viewbox Width="18"
+                                 Height="18">
+                            <muxc:SymbolIcon Symbol="GlobalNavigationButton" 
+                                             Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}"/>
+                        </Viewbox>
+                    </Button>
+                    <Button Grid.Row="2"
+                            Style="{StaticResource AnimatedButtonStyle}"
+                            Background="Transparent"
+                            BorderThickness="1"
+                            helpers:ButtonHelper.MouseHoverColor="{DynamicResource SystemControlBackgroundAltMediumLowBrush}">
+                        <Button.BorderBrush>
+                            <brushes:RevealBorderBrush Color="Gray"
+                                                       Opacity="75" />
+                        </Button.BorderBrush>
+                        <Grid x:Name="userDataDisplayGrid">
+                            <Image x:Name="imageUserFace"
+                                   Width="36"
+                                   Margin="6,15"
+                                   VerticalAlignment="Top"
+                                   helpers:EllipseClipHelper.IsClipping="True">
+                            </Image>
+                        </Grid>
+                    </Button>
+                </Grid>
+            </Border>
+        </muxc:ThemeShadowChrome>
+
+        <controls:WindowCaption Grid.Column="1"
+                                Grid.ColumnSpan="2" 
+                                x:Name="windowCaption"/>
+    </Grid>
+</UserControl>

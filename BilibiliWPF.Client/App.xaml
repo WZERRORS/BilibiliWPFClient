@@ -1,0 +1,21 @@
+﻿<Application x:Class="BiliWpf.Client.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:client="clr-namespace:BiliWpf.Client"
+             xmlns:muxc="http://schemas.modernwpf.com/2019"
+             StartupUri="/Windows/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <muxc:ThemeResources />
+                <muxc:XamlControlsResources />
+                <ResourceDictionary Source="/BilibiliWPF.Controls;component/ResourceDictionaries/Buttons.xaml" />
+                <ResourceDictionary Source="/BilibiliWPF.Controls;component/ResourceDictionaries/Shapes.xaml" />
+                <ResourceDictionary Source="/BilibiliWPF.Controls;component/ResourceDictionaries/TextBoxes.xaml" />
+                <ResourceDictionary Source="/BilibiliWPF.Controls;component/ResourceDictionaries/PasswordBox.xaml" />
+                <!-- Other merged dictionaries here -->
+            </ResourceDictionary.MergedDictionaries>
+            <!-- Other app resources here -->
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
