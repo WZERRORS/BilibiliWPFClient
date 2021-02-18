@@ -12,12 +12,4 @@
     <PackageReference Include="ModernWpfUI" Version="0.9.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="NotoSansTC-Regular.otf"/>
-    <Content Include="Assets\NotoSansTC-Regular.otf"/>
-    <Resource Include="Assets\NotoSansTC-Regular.otf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-
 </Project>

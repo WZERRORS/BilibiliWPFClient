@@ -177,12 +177,6 @@
         </Setter>
     </Style>
 
-    <Style x:Key="GlobalNavigationButtonStyle"
-           TargetType="ButtonBase"
-           BasedOn="{StaticResource AnimatedButtonStyle}">
-        
-    </Style>
-
     <Style x:Key="MahAppButtonStyle" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
         <Setter Property="primitives:ControlHelper.CornerRadius" Value="0" />
         <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
