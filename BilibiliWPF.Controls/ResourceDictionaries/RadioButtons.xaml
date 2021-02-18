@@ -17,7 +17,8 @@
                 <ControlTemplate TargetType="RadioButton">
                     <Grid Background="Transparent"
                           x:Name="ControlRoot"
-                          IsEnabled="{TemplateBinding IsEnabled}">
+                          IsEnabled="{TemplateBinding IsEnabled}"
+                          RenderTransformOrigin="0.5,0.5">
                         <Border Background="{TemplateBinding helpers:ButtonHelper.MouseHoverColor}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 x:Name="mouseSuspendFilter"

@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\bilibili-logo-large.png" />
+    <None Remove="Assets\login-frame-back-trans.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.1.1" />
     <PackageReference Include="ModernWpfUI" Version="0.9.3" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -22,6 +27,15 @@
   <ItemGroup>
     <ProjectReference Include="..\BilibiliWPF.Controls\BilibiliWPF.Controls.csproj" />
     <ProjectReference Include="..\BilibiliWPF.Services\BilibiliWPF.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\bilibili-logo-large.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\login-frame-back-trans.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

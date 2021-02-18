@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BiliWpf.Windows"
-        xmlns:controls="clr-namespace:BiliWpf.Controls"
+        xmlns:windows="clr-namespace:BiliWpf.Client.Windows"
+        xmlns:controls="clr-namespace:BiliWpf.Controls;assembly=BilibiliWPF.Controls"
         xmlns:primitives="clr-namespace:ModernWpf.Controls.Primitives;assembly=ModernWpf"
         xmlns:muxc="http://schemas.modernwpf.com/2019"
         mc:Ignorable="d"
@@ -24,7 +24,7 @@
     </WindowChrome.WindowChrome>
     <Window.Template>
         <ControlTemplate>
-            <Grid Background="#FFF0F0F0"
+            <Grid Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}"
                   x:Name="rootGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30" />
@@ -51,7 +51,7 @@
                 </Grid.Resources>
 
                 <Image Grid.RowSpan="2"
-                       Source="/Assets/login-frame-back.png" />
+                       Source="/Assets/login-frame-back-trans.png" />
                 <Border Grid.RowSpan="2"
                         Background="#3FFFFFFF"
                         x:Name="filter"
