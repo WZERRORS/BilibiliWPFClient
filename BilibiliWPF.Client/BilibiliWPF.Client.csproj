@@ -6,6 +6,8 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>BiliWpf.Client</RootNamespace>
     <CsWinRTWindowsMetadata>10.0.18362.0</CsWinRTWindowsMetadata>
+    <PackageIcon>bili-app-logo.png</PackageIcon>
+    <ApplicationIcon>bili-app-logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

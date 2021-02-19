@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:BiliWpf"
+                    xmlns:local="clr-namespace:BiliWpf.Controls"
                     xmlns:muxc="http://schemas.modernwpf.com/2019"
                     xmlns:primitives="clr-namespace:ModernWpf.Controls.Primitives;assembly=ModernWpf">
     <Style x:Key="DefaultInputBoxStyle" TargetType="TextBox">
@@ -54,7 +54,7 @@
                                                 </MultiTrigger.Conditions>
                                                 <Setter TargetName="DeleteButtonGlyphElement"
                                                         Property="Fill"
-                                                        Value="#FF1E90FF" />
+                                                        Value="{DynamicResource SystemControlForegroundAccentBrush}" />
                                             </MultiTrigger>
                                             <MultiTrigger>
                                                 <MultiTrigger.Conditions>
@@ -67,7 +67,7 @@
                                                         Property="Fill"
                                                         Value="White" />
                                                 <Setter TargetName="BorderElement" Property="Background"
-                                                        Value="#FF1E90FF" />
+                                                        Value="{DynamicResource SystemControlForegroundAccentBrush}" />
                                             </MultiTrigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -132,7 +132,9 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelectionActive" Value="True">
-                            <Setter TargetName="BottomLine" Property="Background" Value="#FF1E90FF" />
+                            <Setter TargetName="BottomLine"
+                                    Property="Background"
+                                    Value="{DynamicResource SystemControlForegroundAccentBrush}" />
                         </Trigger>
                         <Trigger Property="primitives:TextBoxHelper.HasText" Value="True">
                             <Setter TargetName="placeholderTextBlock" Property="Visibility" Value="Collapsed" />

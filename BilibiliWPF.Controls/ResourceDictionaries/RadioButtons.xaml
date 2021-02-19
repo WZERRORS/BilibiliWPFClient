@@ -34,14 +34,16 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox Width="16"
-                                     Height="16"
+                            <Viewbox Width="18"
+                                     Height="18"
                                      HorizontalAlignment="Center"
                                      VerticalAlignment="Center"
-                                     Margin="0,0,2,2">
+                                     Margin="0,0,2,2"
+                                     SnapsToDevicePixels="True">
                                 <muxc:FontIcon FontFamily="Segoe MDL2 Assets"
                                                Glyph="{TemplateBinding helpers:ButtonHelper.IconPath}"
-                                               Foreground="{TemplateBinding Foreground}" />
+                                               Foreground="{TemplateBinding Foreground}" 
+                                               SnapsToDevicePixels="True"/>
                             </Viewbox>
                             <TextBlock HorizontalAlignment="Left"
                                        VerticalAlignment="Center"
@@ -50,7 +52,7 @@
                                        Grid.Column="1"
                                        Margin="10,0"
                                        FontSize="14"
-                                       FontFamily="Source Sans Pro"/>
+                                       FontFamily="Microsoft YaHei UI"/>
                         </Grid>
                         <Border Background="Transparent"
                                 x:Name="mousePressFilter" />
