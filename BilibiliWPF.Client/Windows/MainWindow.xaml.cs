@@ -1,5 +1,6 @@
 ﻿using BiliWpf.Client.UserControls;
 using BiliWpf.Controls;
+using BiliWpf.Services;
 using ModernWpf;
 using System;
 using System.Collections.Generic;
@@ -36,11 +37,16 @@ namespace BiliWpf.Client.Windows
 
             compositor = new WindowAccentCompositor(this);
             SetCompositorColor();
-            
+
             //ThemeManager.ActualApplicationThemeChanged = (manager, obj) =>
             //{
             //    SetCompositorColor();
             //};
+
+            if(BiliClient.Account.Current == null)
+            {
+                (new LoginWindow()).Show();
+            }
         }
 
         public void SetCompositorColor()

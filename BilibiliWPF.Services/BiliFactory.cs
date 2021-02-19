@@ -20,7 +20,6 @@ namespace BiliWpf.Services
         public static ApiKeyInfo VideoKey = new ApiKeyInfo("", "1c15888dc316e05a15fdd0a02ed6584f");
         public static ApiKeyInfo IosKey = new ApiKeyInfo("4ebafd7c4951b366", "8cb98205e9b2ad3669aad0fce12a4c13");
         public const string BuildNumber = "5520400";
-        
 
         public static async Task<string> EncryptAsPasswordAsync(string password)
         {
@@ -138,6 +137,13 @@ namespace BiliWpf.Services
         {
             TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1, 8, 0, 0, 0);
             long seconds = Convert.ToInt64(ts.TotalMilliseconds);
+            return seconds;
+        }
+
+        public static int GetTimeStampFuture(long timeLater)
+        {
+            TimeSpan ts = DateTime.Now.AddSeconds(timeLater) - new DateTime(1970, 1, 1, 8, 0, 0, 0);
+            int seconds = Convert.ToInt32(ts.TotalSeconds);
             return seconds;
         }
     }

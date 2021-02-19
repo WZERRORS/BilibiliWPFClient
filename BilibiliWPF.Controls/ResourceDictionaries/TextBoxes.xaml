@@ -6,9 +6,9 @@
     <Style x:Key="DefaultInputBoxStyle" TargetType="TextBox">
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="primitives:TextBoxHelper.IsEnabled" Value="True" />
-        <Setter Property="Foreground" Value="#333" />
+        <Setter Property="Foreground" Value="{DynamicResource SystemControlBackgroundBaseMediumHighBrush}" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="CaretBrush" Value="Black" />
+        <Setter Property="CaretBrush" Value="{DynamicResource SystemControlForegroundBaseMediumHighBrush}" />
         <Setter Property="KeyboardNavigation.TabNavigation" Value="Local" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Top" />
@@ -39,7 +39,7 @@
                                                 x:Name="BorderElement">
                                             <Viewbox Width="10"
                                                      Height="10">
-                                                <Path Fill="#F333"
+                                                <Path Fill="{DynamicResource SystemControlForegroundBaseMediumHighBrush}"
                                                       x:Name="DeleteButtonGlyphElement"
                                                       Data="{StaticResource ChromeClose}" />
                                             </Viewbox>
@@ -65,7 +65,7 @@
                                                 </MultiTrigger.Conditions>
                                                 <Setter TargetName="DeleteButtonGlyphElement"
                                                         Property="Fill"
-                                                        Value="White" />
+                                                        Value="{DynamicResource SystemControlForegroundAltHighBrush}" />
                                                 <Setter TargetName="BorderElement" Property="Background"
                                                         Value="{DynamicResource SystemControlForegroundAccentBrush}" />
                                             </MultiTrigger>
@@ -126,7 +126,7 @@
                                 primitives:TextBoxHelper.IsDeleteButton="True" />
                         <Border Grid.Row="2"
                                 Height="1"
-                                Background="#F666"
+                                Background="{DynamicResource SystemControlBackgroundBaseMediumBrush}"
                                 Grid.ColumnSpan="2"
                                 x:Name="BottomLine" />
                     </Grid>

@@ -93,8 +93,8 @@
                                     Property="RenderTransform">
                                 <Setter.Value>
                                     <TransformGroup>
-                                        <ScaleTransform ScaleX="0.98"
-                                                        ScaleY="0.97" />
+                                        <ScaleTransform ScaleX="0.99"
+                                                        ScaleY="0.98"/>
                                     </TransformGroup>
                                 </Setter.Value>
                             </Setter>

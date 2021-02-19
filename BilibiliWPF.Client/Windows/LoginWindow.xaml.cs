@@ -66,6 +66,7 @@ namespace BiliWpf.Client.Windows
             qrcodeOutdatedFilter = GetTemplateChild("qrcodeOutdatedFilter") as Border;
 
             windowCaption.SetTargetWindow(this);
+            windowCaption.SetMinimizeEnabled(false);
             windowCaption.SetMaximizeEnabled(false);
 
             ((Button)GetTemplateChild("nextStep")).Click += new RoutedEventHandler(NextStep_Click);

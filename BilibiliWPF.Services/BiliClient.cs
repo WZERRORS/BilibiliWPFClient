@@ -1,3 +1,5 @@
+using BiliWpf.Services.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
@@ -11,18 +13,15 @@ namespace BiliWpf.Services
     public class BiliClient
     {
         public static readonly BiliClient Current = new BiliClient();
-        public BiliFactory Factory { get; set; }
-        private string _accessToken = "";
         private string sid = "";
         private string mid = "";
         private HttpClient _httpClient;
+        private AccountService _account;
+        public static string AccessToken { get; set; }
+        public static AccountService Account { get { return Current._account; } }
 
-        public static string AccessToken { get { return Current._accessToken; } }
-
-
-        public BiliClient()
+        public BiliClient(string accessToken = "", string refreshToken = "", int expiry = 0)
         {
-            Factory = new BiliFactory();
             _httpClient = new HttpClient();
 
             _httpClient.DefaultRequestHeaders.Add("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
@@ -32,6 +31,10 @@ namespace BiliWpf.Services
                 Method = new HttpMethod("HEAD"),
                 RequestUri = new Uri("http://www.bilibili.com/")
             }).Result.EnsureSuccessStatusCode();
+
+            var package = new TokenPackage(accessToken, refreshToken, expiry);
+            AccessToken = accessToken;
+            _account = new AccountService(package);
         }
 
         /// <summary>
@@ -46,7 +49,9 @@ namespace BiliWpf.Services
             var response = await _httpClient.GetAsync(new Uri(url));
             if(response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadAsStringAsync();
+                var str = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine(str);
+                return str;
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.TemporaryRedirect
                 || response.StatusCode == System.Net.HttpStatusCode.MovedPermanently)
@@ -67,6 +72,7 @@ namespace BiliWpf.Services
             {
                 string str = await response.Content.ReadAsStringAsync();
                 var jobj = JObject.Parse(str);
+                System.Diagnostics.Debug.WriteLine(jobj.ToString());
                 if (total)
                     return jobj;
 
@@ -82,6 +88,23 @@ namespace BiliWpf.Services
             {
                 return null;
             }
+        }
+
+        public async Task<T> GetObjectFromWebAsync<T>(string url, Type type) where T : class
+        {
+            string response = await GetStringFromWebAsync(url);
+            if (!string.IsNullOrEmpty(response))
+            {
+                try
+                {
+                    return JsonConvert.DeserializeObject<T>(response);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex);
+                }
+            }
+            return null;
         }
 
         public async Task<Stream> GetStreamFromWebAsync(string url)
@@ -106,7 +129,9 @@ namespace BiliWpf.Services
             var response = await _httpClient.PostAsync(new Uri(url), new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded"));
             if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadAsStringAsync();
+                var str = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine(str);
+                return str;
             }
             else
             {
