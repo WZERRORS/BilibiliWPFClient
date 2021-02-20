@@ -75,16 +75,9 @@ namespace BiliWpf.Services
                 {
                     var jobj = JObject.Parse(response);
                     int code = Convert.ToInt32(jobj["code"]);
-                    switch (code)
-                    {
-                        case 0:
-                            var data = new LoginResult(jobj.Value<JObject>("data"));
-                            var package = new TokenPackage(data.Token.AccessToken, data.Token.RefreshToken, BiliFactory.GetTimeStampFuture(data.Token.Expires));
-                            break;
-                    }
                     if (code == 0)
                     {
-                        var data = JsonConvert.DeserializeObject<LoginResult>(jobj["data"].ToString());
+                        var data = new LoginResult(jobj.Value<JObject>("data"));
                         var package = new TokenPackage(data.Token.AccessToken, data.Token.RefreshToken, BiliFactory.GetTimeStampFuture(data.Token.Expires));
                         InitToken(package);
                         TokenChanged?.Invoke(this, package);

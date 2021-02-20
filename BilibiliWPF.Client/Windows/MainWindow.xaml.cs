@@ -45,7 +45,16 @@ namespace BiliWpf.Client.Windows
 
             if(BiliClient.Account.Current == null)
             {
-                (new LoginWindow()).Show();
+                var loginWindow = new LoginWindow();
+
+                loginWindow.Closed += delegate
+                {
+                    if (BiliClient.Account.Current == null)
+                        this.Close();
+                };
+
+                loginWindow.Show();
+
             }
         }
 

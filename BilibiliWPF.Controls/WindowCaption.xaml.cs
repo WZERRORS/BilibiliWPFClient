@@ -101,6 +101,11 @@ namespace BiliWpf.Controls
             };
         }
 
+        public Window GetTargetWindow()
+        {
+            return window;
+        }
+
         private void SetColor()
         {
             Color baseHighColor = (Color)Application.Current.Resources["SystemBaseHighColor"];
