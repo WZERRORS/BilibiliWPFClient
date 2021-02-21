@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BilibiliWPF.Controls\BilibiliWPF.Controls.csproj" />
     <ProjectReference Include="..\BilibiliWPF.Services\BilibiliWPF.Services.csproj" />
   </ItemGroup>

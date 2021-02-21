@@ -43,14 +43,17 @@ namespace BiliWpf.Client.Windows
             //    SetCompositorColor();
             //};
 
-            if(BiliClient.Account.Current == null)
+            if(BiliClient.Account.Me == null)
             {
                 var loginWindow = new LoginWindow();
 
                 loginWindow.Closed += delegate
                 {
-                    if (BiliClient.Account.Current == null)
+                    if (BiliClient.Account.Me == null)
                         this.Close();
+                    else
+                        navigationRoot.SetCurrentUserData(BiliClient.Account.Me);
+
                 };
 
                 loginWindow.Show();

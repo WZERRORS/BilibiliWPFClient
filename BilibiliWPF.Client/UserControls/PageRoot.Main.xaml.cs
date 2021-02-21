@@ -1,4 +1,6 @@
-﻿using BiliWpf.Controls;
+﻿using BiliWpf.Client.Pages;
+using BiliWpf.Controls;
+using BiliWpf.Sevices.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ModernWpf.Media.Animation;
 
 namespace BiliWpf.Client.UserControls
 {
@@ -26,6 +29,13 @@ namespace BiliWpf.Client.UserControls
         public PageRoot()
         {
             InitializeComponent();
+
+            contentFrame.Navigated += (sender, args) => contentFramePgRing.Visibility = Visibility.Collapsed;
+        }
+
+        public void SetCurrentUserData(Me me)
+        {
+            contentFrame.Navigate(typeof(HomePage), null, new DrillInNavigationTransitionInfo());
         }
     }
 }

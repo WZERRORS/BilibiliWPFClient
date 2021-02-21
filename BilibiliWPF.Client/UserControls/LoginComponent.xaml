@@ -146,6 +146,8 @@
                                               FontSize="12" />
                         <muxc:ProgressRing Height="32"
                                            Width="32"
+                                           HorizontalAlignment="Left"
+                                           Background="Black"
                                            x:Name="loginProgressRing"
                                            Grid.Row="4"/>
                         <Button Height="32"

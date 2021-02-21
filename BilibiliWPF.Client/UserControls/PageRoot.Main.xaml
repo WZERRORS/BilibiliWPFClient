@@ -95,6 +95,14 @@
             </Border>
         </muxc:ThemeShadowChrome>
 
+        <Grid Grid.RowSpan="2" 
+              Grid.Column="1">
+            <muxc:Frame x:Name="contentFrame" />
+            <muxc:ProgressRing Height="48"
+                               Width="48"
+                               x:Name="contentFramePgRing" />
+        </Grid>
+
         <controls:WindowCaption Grid.Column="1"
                                 Grid.ColumnSpan="2" 
                                 x:Name="windowCaption"/>

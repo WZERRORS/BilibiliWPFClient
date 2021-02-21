@@ -43,7 +43,7 @@ namespace BiliWpf.Client.UserControls
 
             IsExpanded = !IsExpanded;
         }
-        
+
         private void NavigationView_MouseEnter(object sender, MouseEventArgs e)
         {
             expandWaiter = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(650) };
@@ -59,7 +59,7 @@ namespace BiliWpf.Client.UserControls
 
         private void NavigationView_MouseLeave(object sender, MouseEventArgs e)
         {
-            if(expandWaiter != null)
+            if (expandWaiter != null)
             {
                 expandWaiter.Stop();
                 expandWaiter = null;

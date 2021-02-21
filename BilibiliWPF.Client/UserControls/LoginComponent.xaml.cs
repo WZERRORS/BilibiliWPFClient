@@ -59,7 +59,7 @@ namespace BiliWpf.Client.UserControls
                 case LoginResultType.Success:
                     Task.Run(async () => 
                     {
-                        await BiliClient.Account.GetCurrentUserAsync();
+                        await BiliClient.Account.GetMeAsync();
                         Application.Current.Dispatcher.Invoke(() => windowCaption.GetTargetWindow().Close());
                     });
                     break;

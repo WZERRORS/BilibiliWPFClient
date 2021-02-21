@@ -1,7 +1,9 @@
+using BiliWpf.Services.Enums;
 using BiliWpf.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -206,6 +208,52 @@ namespace BiliWpf.Services
         public static void SetCookie(string url, string name, string value)
         {
             Application.SetCookie(new Uri(url), string.Format("{0}={1}", name, value));
+        }
+
+        /// <summary>
+        /// 写入本地设置
+        /// </summary>
+        /// <param name="key">设置名</param>
+        /// <param name="value">设置值</param>
+        public static void WriteLocalSetting(Settings key, string value)
+        {
+            ConfigurationManager.AppSettings.Set("bilibili_" + key.ToString(), value);
+        }
+
+        /// <summary>
+        /// 读取本地设置
+        /// </summary>
+        /// <param name="key">设置名</param>
+        /// <param name="defaultValue">默认值</param>
+        /// <returns></returns>
+        public static string GetLocalSetting(Settings key, string defaultValue)
+        {
+            return ConfigurationManager.AppSettings.Get(key.ToString());
+            /**
+            var localSetting = ApplicationData.Current.LocalSettings;
+            var localcontainer = localSetting.CreateContainer("BiliBili", ApplicationDataCreateDisposition.Always);
+            bool isKeyExist = localcontainer.Values.ContainsKey(key.ToString());
+            if (isKeyExist)
+            {
+                return localcontainer.Values[key.ToString()].ToString();
+            }
+            else
+            {
+                WriteLocalSetting(key, defaultValue);
+                return defaultValue;
+            }
+            */
+        }
+
+        /// <summary>
+        /// 获取布尔值的设置
+        /// </summary>
+        /// <param name="key">设置名</param>
+        /// <param name="defaultValue">默认值</param>
+        /// <returns></returns>
+        public static bool GetBoolSetting(Settings key, bool defaultValue = true)
+        {
+            return Convert.ToBoolean(GetLocalSetting(key, defaultValue.ToString()));
         }
     }
 }

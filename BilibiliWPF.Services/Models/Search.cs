@@ -102,7 +102,7 @@ namespace BiliWpf.Services.Models
         public int fans { get; set; }
         public string render_fans
         {
-            get => AppTool.GetNumberAbbreviation(fans);
+            get => BiliFactory.GetNumberAbbreviation(fans);
         }
         public int level { get; set; }
         public string render_level
@@ -114,7 +114,7 @@ namespace BiliWpf.Services.Models
         public int archives { get; set; }
         public string render_archives
         {
-            get => AppTool.GetNumberAbbreviation(archives);
+            get =>  BiliFactory.GetNumberAbbreviation(archives);
         }
         public int roomid { get; set; }
         public int attentions { get; set; }
@@ -138,7 +138,7 @@ namespace BiliWpf.Services.Models
         public int vote { get; set; }
         public string render_vote
         {
-            get => AppTool.GetNumberAbbreviation(vote) + "人";
+            get => BiliFactory.GetNumberAbbreviation(vote) + "人";
         }
         public string area { get; set; }
         public string staff { get; set; }

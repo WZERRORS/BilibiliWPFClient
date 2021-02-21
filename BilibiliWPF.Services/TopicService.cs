@@ -60,7 +60,7 @@ namespace BiliBili_Lib.Service
             if (data != null && data.cards!=null)
             {
                 data.cards.RemoveAll(p => p == null || p.card == null || p.card.Length < 10 || p.desc.status != 1);
-                AppTool.WriteLocalSetting(Enums.Settings.LastSeemDynamicId, data.max_dynamic_id);
+                BiliClient.WriteLocalSetting(BiliWpf.Services.Enums.Settings.LastSeemDynamicId, data.max_dynamic_id);
             }
             return data;
         }

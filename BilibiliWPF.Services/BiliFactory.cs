@@ -171,6 +171,21 @@ namespace BiliWpf.Services
             int seconds = Convert.ToInt32(ts.TotalSeconds);
             return seconds;
         }
+
+        /// <summary>
+        /// 获取数字的缩写
+        /// </summary>
+        /// <param name="number">数字</param>
+        /// <returns></returns>
+        public static string GetNumberAbbreviation(double number)
+        {
+            string result = string.Empty;
+            if (number < 10000)
+                result = number.ToString();
+            else
+                result = Math.Round(number / 10000.0, 1).ToString() + "万";
+            return result;
+        }
     }
 
 }
