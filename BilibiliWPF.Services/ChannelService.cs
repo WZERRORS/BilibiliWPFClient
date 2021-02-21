@@ -1,6 +1,5 @@
-﻿using BiliBili_Lib.Models.BiliBili;
-using BiliBili_Lib.Models.Others;
-using BiliBili_Lib.Tools;
+﻿using BiliWpf.Services;
+using BiliWpf.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -24,8 +23,8 @@ namespace BiliBili_Lib.Service
             _hotChannelOffset += 5;
             var param = new Dictionary<string, string>();
             param.Add("offset", _hotChannelOffset.ToString());
-            string url = BiliTool.UrlContact(Api.CHANNEL_HOT, param, true);
-            var data = await BiliTool.ConvertEntityFromWebAsync<List<ChannelBase>>(url, "data.items.list");
+            string url = BiliFactory.UrlContact(Api.CHANNEL_HOT, param, true);
+            var data = await BiliClient.ConvertEntityFromWebAsync<List<ChannelBase>>(url, "data.items.list");
             return data;
         }
         /// <summary>
@@ -40,8 +39,8 @@ namespace BiliBili_Lib.Service
             param.Add("pn", "0");
             param.Add("qn", "32");
             param.Add("spmid", "traffic.channel-square.0.0");
-            string url = BiliTool.UrlContact(Api.CHANNEL_SQUARE, param, true);
-            string content = await BiliTool.GetTextFromWebAsync(url);
+            string url = BiliFactory.UrlContact(Api.CHANNEL_SQUARE, param, true);
+            string content = await BiliClient.GetStringFromWebAsync(url);
             if (!string.IsNullOrEmpty(content))
             {
                 try
@@ -51,7 +50,7 @@ namespace BiliBili_Lib.Service
                     var subscribes = JsonConvert.DeserializeObject<List<ChannelSlim>>(subString);
                     subscribes.RemoveAll(p => p.id == 0);
                     var square = new ChannelSquare() { Subscribes = subscribes };
-                    if (!string.IsNullOrEmpty(BiliTool._accessToken))
+                    if (!string.IsNullOrEmpty(BiliClient.AccessToken))
                     {
                         var scanToken = jarr.Where(p => p["model_type"].ToString() == "scaned").FirstOrDefault();
                         if (scanToken != null)
@@ -78,8 +77,8 @@ namespace BiliBili_Lib.Service
             var param = new Dictionary<string, string>();
             param.Add("channel_id", channelId.ToString());
             
-            string url = BiliTool.UrlContact(Api.CHANNEL_DETAIL, param, true);
-            var data = await BiliTool.ConvertEntityFromWebAsync<ChannelDetail>(url);
+            string url = BiliFactory.UrlContact(Api.CHANNEL_DETAIL, param, true);
+            var data = await BiliClient.ConvertEntityFromWebAsync<ChannelDetail>(url);
             return data;
         }
         /// <summary>
@@ -96,8 +95,8 @@ namespace BiliBili_Lib.Service
             param.Add("sort", sort);
             if (!string.IsNullOrEmpty(offset))
                 param.Add("offset", offset);
-            string url = BiliTool.UrlContact(Api.CHANNEL_VIDEO, param, true);
-            string content = await BiliTool.GetTextFromWebAsync(url,true);
+            string url = BiliFactory.UrlContact(Api.CHANNEL_VIDEO, param, true);
+            string content = await BiliClient.GetStringFromWebAsync(url,true);
             if (!string.IsNullOrEmpty(content))
             {
                 var jobj = JObject.Parse(content);
@@ -127,8 +126,8 @@ namespace BiliBili_Lib.Service
         {
             var param = new Dictionary<string, string>();
             param.Add("channel_id", channelId.ToString());
-            var data = BiliTool.UrlContact("", param, true);
-            var response = await BiliTool.PostContentToWebAsync(Api.CHANNEL_UNSUBSCRIBE, data);
+            var data = BiliFactory.UrlContact("", param, true);
+            var response = await BiliClient.PostContentToWebAsync(Api.CHANNEL_UNSUBSCRIBE, data);
             if (!string.IsNullOrEmpty(response))
             {
                 var jobj = JObject.Parse(response);
@@ -146,8 +145,8 @@ namespace BiliBili_Lib.Service
         {
             var param = new Dictionary<string, string>();
             param.Add("channel_id", channelId.ToString());
-            var data = BiliTool.UrlContact("", param, true);
-            var response = await BiliTool.PostContentToWebAsync(Api.CHANNEL_SUBSCRIBE, data);
+            var data = BiliFactory.UrlContact("", param, true);
+            var response = await BiliClient.PostContentToWebAsync(Api.CHANNEL_SUBSCRIBE, data);
             if (!string.IsNullOrEmpty(response))
             {
                 var jobj = JObject.Parse(response);
@@ -162,8 +161,8 @@ namespace BiliBili_Lib.Service
         /// <returns></returns>
         public async Task<List<ChannelTab>> GetChannelTabsAsync()
         {
-            var url = BiliTool.UrlContact(Api.CHANNEL_TABS, hasAccessKey: true);
-            var data = await BiliTool.ConvertEntityFromWebAsync<List<ChannelTab>>(url);
+            var url = BiliFactory.UrlContact(Api.CHANNEL_TABS, hasAccessKey: true);
+            var data = await BiliClient.ConvertEntityFromWebAsync<List<ChannelTab>>(url);
             return data;
         }
         /// <summary>
@@ -175,8 +174,8 @@ namespace BiliBili_Lib.Service
             var param = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(offset))
                 param.Add("offset", offset);
-            var url = BiliTool.UrlContact(Api.CHANNEL_MYSUBSCRIBE,param,true);
-            var data = await BiliTool.ConvertEntityFromWebAsync<List<ChannelListItem>>(url,"data.normal");
+            var url = BiliFactory.UrlContact(Api.CHANNEL_MYSUBSCRIBE,param,true);
+            var data = await BiliClient.ConvertEntityFromWebAsync<List<ChannelListItem>>(url,"data.normal");
             return data;
         }
         /// <summary>
@@ -191,8 +190,8 @@ namespace BiliBili_Lib.Service
             param.Add("type", id.ToString());
             if (!string.IsNullOrEmpty(offset))
                 param.Add("offset", offset);
-            string url = BiliTool.UrlContact(Api.CHANNEL_LIST, param, true);
-            var response = await BiliTool.ConvertEntityFromWebAsync<List<ChannelListItem>>(url,"data.items");
+            string url = BiliFactory.UrlContact(Api.CHANNEL_LIST, param, true);
+            var response = await BiliClient.ConvertEntityFromWebAsync<List<ChannelListItem>>(url,"data.items");
             return response;
         }
         /// <summary>
@@ -208,8 +207,8 @@ namespace BiliBili_Lib.Service
             param.Add("keyword", Uri.EscapeDataString(search));
             param.Add("pn", pn.ToString());
             param.Add("ps", ps.ToString());
-            string url = BiliTool.UrlContact(Api.CHANNEL_SEARCH, param, true);
-            var items = await BiliTool.ConvertEntityFromWebAsync<List<ChannelListItem>>(url, "data.items");
+            string url = BiliFactory.UrlContact(Api.CHANNEL_SEARCH, param, true);
+            var items = await BiliClient.ConvertEntityFromWebAsync<List<ChannelListItem>>(url, "data.items");
             return items;
         }
         /// <summary>
@@ -225,8 +224,8 @@ namespace BiliBili_Lib.Service
             //param.Add("channel_name", Uri.EscapeDataString(tagName));
             param.Add("display_id", offset.ToString());
             param.Add("pull", "true");
-            string url = BiliTool.UrlContact(Api.CHANNEL_TAG_RECOMMEND, param, true);
-            var videos = await BiliTool.ConvertEntityFromWebAsync<List<VideoRecommend>>(url, "data.feed");
+            string url = BiliFactory.UrlContact(Api.CHANNEL_TAG_RECOMMEND, param, true);
+            var videos = await BiliClient.ConvertEntityFromWebAsync<List<VideoRecommend>>(url, "data.feed");
             return videos;
         }
         /// <summary>
@@ -238,8 +237,8 @@ namespace BiliBili_Lib.Service
         {
             var param = new Dictionary<string, string>();
             param.Add("channel_id", tagId.ToString());
-            string url = BiliTool.UrlContact(Api.CHANNEL_TAG_TAB, param, true);
-            var data = await BiliTool.ConvertEntityFromWebAsync<ChannelTag>(url);
+            string url = BiliFactory.UrlContact(Api.CHANNEL_TAG_TAB, param, true);
+            var data = await BiliClient.ConvertEntityFromWebAsync<ChannelTag>(url);
             return data;
         }
     }
