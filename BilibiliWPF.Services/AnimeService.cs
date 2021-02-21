@@ -65,8 +65,10 @@ namespace BiliWpf.Services
         /// <returns></returns>
         public async Task<bool> CheckUserCoinAsync(int epid)
         {
-            var param = new Dictionary<string, string>();
-            param.Add("ep_id", epid.ToString());
+            var param = new Dictionary<string, string>
+            {
+                { "ep_id", epid.ToString() }
+            };
             string url = BiliFactory.UrlContact(Api.ANIME_CHECK_COIN, param, true);
             try
             {

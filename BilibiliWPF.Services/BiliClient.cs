@@ -97,7 +97,7 @@ namespace BiliWpf.Services
                     return null;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //_logger.Error($"请求出现异常:{url}", ex);
                 return null;

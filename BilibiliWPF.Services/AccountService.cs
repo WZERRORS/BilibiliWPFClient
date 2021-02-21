@@ -1,13 +1,22 @@
 ﻿using BiliWpf.Services.Enums;
 using BiliWpf.Services.Models;
+using BiliWpf.Services.Models.Account;
+using BiliWpf.Services.Models.Favorites;
+using BiliWpf.Services.Models.Feedback;
+using BiliWpf.Services.Models.Video;
+using BiliWpf.Sevices.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using Windows.Security.Cryptography.Core;
+using Windows.Storage.Streams;
 
 namespace BiliWpf.Services
 {
@@ -17,7 +26,7 @@ namespace BiliWpf.Services
         private string _refreshToken;
         private string _userId;
         public int _expiry;
-        public UserData Current;
+        public Me Me;
 
         public AccountService(TokenPackage p)
         {
@@ -25,7 +34,6 @@ namespace BiliWpf.Services
         }
 
         public event EventHandler<TokenPackage> TokenChanged;
-
         private void InitToken(TokenPackage p)
         {
             BiliClient.AccessToken = _accessToken = p.AccessToken;
@@ -39,13 +47,13 @@ namespace BiliWpf.Services
         /// <returns></returns>
         public async Task<BitmapImage> GetCaptchaAsync()
         {
-            var stream = await BiliClient.Current.GetStreamFromWebAsync($"{Api.PASSPORT_CAPTCHA}?ts=${BiliFactory.GetNowSeconds()}");
+            var stream = await BiliClient.GetStreamFromWebAsync($"{Api.PASSPORT_CAPTCHA}?ts=${BiliFactory.GetNowSeconds()}");
             if (stream != null)
             {
                 var bitmap = new BitmapImage();
                 bitmap.BeginInit();
                 bitmap.StreamSource = stream;
-                bitmap.EndInit();
+                bitmap.BeginInit();
                 return bitmap;
             }
             return new BitmapImage(new Uri("ms-appx:///Assets/captcha_refresh.png"));
@@ -66,7 +74,7 @@ namespace BiliWpf.Services
                 param += "&captcha=" + captcha;
             }
             param += "&sign=" + BiliFactory.GetSign(param);
-            string response = await BiliClient.Current.PostContentToWebAsync(Api.PASSPORT_LOGIN, param);
+            string response = await BiliClient.PostContentToWebAsync(Api.PASSPORT_LOGIN, param);
             var result = new LoginCallback();
             result.Status = LoginResultType.Error;
             if (!string.IsNullOrEmpty(response))
@@ -77,8 +85,8 @@ namespace BiliWpf.Services
                     int code = Convert.ToInt32(jobj["code"]);
                     if (code == 0)
                     {
-                        var data = new LoginResult(jobj.Value<JObject>("data"));
-                        var package = new TokenPackage(data.Token.AccessToken, data.Token.RefreshToken, BiliFactory.GetTimeStampFuture(data.Token.Expires));
+                        var data = JsonConvert.DeserializeObject<LoginResult>(jobj["data"].ToString());
+                        var package = new TokenPackage(data.token_info.access_token, data.token_info.refresh_token, BiliFactory.GetTimeStampFuture(data.token_info.expires_in));
                         InitToken(package);
                         TokenChanged?.Invoke(this, package);
                         result.Status = LoginResultType.Success;
@@ -133,15 +141,15 @@ namespace BiliWpf.Services
         public async Task<bool> RefreshTokenAsync()
         {
             try
-            { 
+            {
                 var param = $"access_token={_accessToken}&refresh_token={_refreshToken}&appkey={BiliFactory.AndroidKey.Appkey}&ts={BiliFactory.GetNowSeconds()}";
                 param += "&sign=" + BiliFactory.GetSign(param);
-                var content = await BiliClient.Current.PostContentToWebAsync(Api.PASSPORT_REFRESH_TOKEN, param);
+                var content = await BiliClient.PostContentToWebAsync(Api.PASSPORT_REFRESH_TOKEN, param);
                 var obj = JObject.Parse(content);
                 if (Convert.ToInt32(obj["code"]) == 0)
                 {
                     var data = JsonConvert.DeserializeObject<TokenInfo>(obj["data"].ToString());
-                    var package = new TokenPackage(data.AccessToken, data.RefreshToken, BiliFactory.GetTimeStampFuture(data.Expires));
+                    var package = new TokenPackage(data.access_token, data.refresh_token, BiliFactory.GetTimeStampFuture(data.expires_in));
                     InitToken(package);
                     TokenChanged?.Invoke(this, package);
                     await SSO();
@@ -165,7 +173,8 @@ namespace BiliWpf.Services
                 var param = new Dictionary<string, string>();
                 param.Add("access_token", _accessToken);
                 var url = BiliFactory.UrlContact(Api.PASSPORT_CHECK_TOKEN, param);
-                var obj = await BiliClient.Current.GetJsonFromWebAsync(url, false);
+                var content = await BiliClient.GetStringFromWebAsync(url, true);
+                var obj = JObject.Parse(content);
                 if (Convert.ToInt32(obj["code"]) == 0)
                 {
                     return true;
@@ -185,7 +194,7 @@ namespace BiliWpf.Services
             try
             {
                 var url = BiliFactory.UrlContact(Api.PASSPORT_SSO, hasAccessKey: true);
-                await BiliClient.Current.GetStringFromWebAsync(url);
+                await BiliClient.GetStringFromWebAsync(url, true);
             }
             catch (Exception)
             {
@@ -196,16 +205,14 @@ namespace BiliWpf.Services
         /// 获取我的个人信息
         /// </summary>
         /// <returns></returns>
-        public async Task<UserData> GetCurrentUserAsync()
+        public async Task<Me> GetMeAsync()
         {
             var url = BiliFactory.UrlContact(Api.ACCOUNT_MINE, hasAccessKey: true);
-            var jobj = await BiliClient.Current.GetJsonFromWebAsync(url);
-            var data = await UserData.GetUserData(jobj.ToObject<JObject>());
-            Current = data;
-            //BiliTool.mid = _userId = data.mid.ToString();
+            var data = await BiliClient.ConvertEntityFromWebAsync<Me>(url);
+            Me = data;
+            BiliClient.Mid = _userId = data.mid.ToString();
             return data;
         }
-        /**
         /// <summary>
         /// 关注用户
         /// </summary>
@@ -216,8 +223,8 @@ namespace BiliWpf.Services
             var param = new Dictionary<string, string>();
             param.Add("uid", Me.mid.ToString());
             param.Add("follow", uid.ToString());
-            var data = BiliTool.UrlContact("", param, true);
-            string response = await BiliTool.PostContentToWebAsync(Api.ACCOUNT_FOLLOW_USER, data);
+            var data = BiliFactory.UrlContact("", param, true);
+            string response = await BiliClient.PostContentToWebAsync(Api.ACCOUNT_FOLLOW_USER, data);
             if (!string.IsNullOrEmpty(response))
             {
                 var jobj = JObject.Parse(response);
@@ -235,8 +242,8 @@ namespace BiliWpf.Services
             var param = new Dictionary<string, string>();
             param.Add("uid", Me.mid.ToString());
             param.Add("follow", uid.ToString());
-            var data = BiliTool.UrlContact("", param, true);
-            string response = await BiliTool.PostContentToWebAsync(Api.ACCOUNT_UNFOLLOW_USER, data);
+            var data = BiliFactory.UrlContact("", param, true);
+            string response = await BiliClient.PostContentToWebAsync(Api.ACCOUNT_UNFOLLOW_USER, data);
             if (!string.IsNullOrEmpty(response))
             {
                 var jobj = JObject.Parse(response);
@@ -253,7 +260,7 @@ namespace BiliWpf.Services
         public async Task<List<VideoDetail>> GetVideoHistoryAsync(int page = 1)
         {
             string url = Api.ACCOUNT_HISTORY + $"?pn={page}&ps=40";
-            var data = await BiliTool.ConvertEntityFromWebAsync<List<VideoDetail>>(url);
+            var data = await BiliClient.ConvertEntityFromWebAsync<List<VideoDetail>>(url);
             return data;
         }
 
@@ -263,8 +270,8 @@ namespace BiliWpf.Services
         /// <returns></returns>
         public async Task<bool> ClearHistoryAsync()
         {
-            string url = BiliTool.UrlContact(Api.ACCOUNT_HISTORY_CLEAR, null, true);
-            string content = await BiliTool.PostContentToWebAsync(url, "");
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_HISTORY_CLEAR, null, true);
+            string content = await BiliClient.PostContentToWebAsync(url, "");
             return content != null;
         }
         /// <summary>
@@ -276,8 +283,8 @@ namespace BiliWpf.Services
         {
             var param = new Dictionary<string, string>();
             param.Add("aid", string.Join(',', aids));
-            var data = BiliTool.UrlContact("", param, true);
-            string content = await BiliTool.PostContentToWebAsync(Api.ACCOUNT_HISTORY_DEL, data);
+            var data = BiliFactory.UrlContact("", param, true);
+            string content = await BiliClient.PostContentToWebAsync(Api.ACCOUNT_HISTORY_DEL, data);
             if (!string.IsNullOrEmpty(content))
             {
                 var jobj = JObject.Parse(content);
@@ -294,8 +301,8 @@ namespace BiliWpf.Services
         {
             var param = new Dictionary<string, string>();
             param.Add("up_mid", _userId);
-            string url = BiliTool.UrlContact(Api.ACCOUNT_MEDIALIST, param, true);
-            string response = await BiliTool.GetTextFromWebAsync(url);
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_MEDIALIST, param, true);
+            string response = await BiliClient.GetStringFromWebAsync(url);
             try
             {
                 var jarr = JArray.Parse(response);
@@ -332,8 +339,8 @@ namespace BiliWpf.Services
             param.Add("ps", "20");
             param.Add("pn", pn.ToString());
             param.Add("type", "2");
-            string url = BiliTool.UrlContact(Api.ACCOUNT_FAVORITE_LIST, param, true);
-            return await BiliTool.ConvertEntityFromWebAsync<List<FavoriteItem>>(url, "data.list");
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_FAVORITE_LIST, param, true);
+            return await BiliClient.ConvertEntityFromWebAsync<List<FavoriteItem>>(url, "data.list");
         }
         /// <summary>
         /// 获取收集列表
@@ -347,8 +354,8 @@ namespace BiliWpf.Services
             param.Add("up_mid", uid.ToString());
             param.Add("ps", "20");
             param.Add("pn", pn.ToString());
-            string url = BiliTool.UrlContact(Api.ACCOUNT_COLLECT_LIST, param, true);
-            return await BiliTool.ConvertEntityFromWebAsync<List<FavoriteItem>>(url, "data.list");
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_COLLECT_LIST, param, true);
+            return await BiliClient.ConvertEntityFromWebAsync<List<FavoriteItem>>(url, "data.list");
         }
 
         /// <summary>
@@ -361,8 +368,8 @@ namespace BiliWpf.Services
             param.Add("ps", "20");
             param.Add("pn", page.ToString());
             param.Add("status", "2");
-            string url = BiliTool.UrlContact(Api.ACCOUNT_FAVOROTE_ANIME, param, true);
-            var respons = await BiliTool.GetTextFromWebAsync(url, false, "result");
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_FAVOROTE_ANIME, param, true);
+            var respons = await BiliClient.GetStringFromWebAsync(url, false, "result");
             if (!string.IsNullOrEmpty(respons))
             {
                 var jobj = JObject.Parse(respons);
@@ -385,8 +392,8 @@ namespace BiliWpf.Services
             param.Add("ps", "20");
             param.Add("pn", page.ToString());
             param.Add("status", "2");
-            string url = BiliTool.UrlContact(Api.ACCOUNT_FAVOROTE_CINEMA, param, true);
-            var respons = await BiliTool.GetTextFromWebAsync(url, false, "result");
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_FAVOROTE_CINEMA, param, true);
+            var respons = await BiliClient.GetStringFromWebAsync(url, false, "result");
             if (!string.IsNullOrEmpty(respons))
             {
                 var jobj = JObject.Parse(respons);
@@ -409,8 +416,8 @@ namespace BiliWpf.Services
             var param = new Dictionary<string, string>();
             param.Add("pn", "1");
             param.Add("media_id", id.ToString());
-            string url = BiliTool.UrlContact(Api.ACCOUNT_FAVORITE_IDS, param, true);
-            var response = await BiliTool.ConvertEntityFromWebAsync<List<FavoriteId>>(url);
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_FAVORITE_IDS, param, true);
+            var response = await BiliClient.ConvertEntityFromWebAsync<List<FavoriteId>>(url);
             return response;
         }
 
@@ -424,8 +431,8 @@ namespace BiliWpf.Services
             var items = ids.Select(p => p.id + ":" + p.type);
             var param = new Dictionary<string, string>();
             param.Add("resources", string.Join(",", items));
-            string url = BiliTool.UrlContact(Api.ACCOUNT_FAVORITE_INFO, param, true);
-            var response = await BiliTool.ConvertEntityFromWebAsync<List<FavoriteVideo>>(url);
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_FAVORITE_INFO, param, true);
+            var response = await BiliClient.ConvertEntityFromWebAsync<List<FavoriteVideo>>(url);
             return response;
         }
 
@@ -437,7 +444,7 @@ namespace BiliWpf.Services
         public async Task<List<VideoDetail>> GetViewLaterAsync(int page = 1)
         {
             string url = Api.ACCOUNT_VIEWLATER + $"?pn={page}&ps=40";
-            var data = await BiliTool.ConvertEntityFromWebAsync<List<VideoDetail>>(url, "data.list");
+            var data = await BiliClient.ConvertEntityFromWebAsync<List<VideoDetail>>(url, "data.list");
             return data;
         }
 
@@ -447,8 +454,8 @@ namespace BiliWpf.Services
         /// <returns></returns>
         public async Task<bool> ClearViewLaterAsync()
         {
-            string url = BiliTool.UrlContact(Api.ACCOUNT_VIEWLATER_CLEAR, null, true);
-            string content = await BiliTool.PostContentToWebAsync(url, "");
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_VIEWLATER_CLEAR, null, true);
+            string content = await BiliClient.PostContentToWebAsync(url, "");
             return content != null;
         }
 
@@ -461,8 +468,8 @@ namespace BiliWpf.Services
         {
             var param = new Dictionary<string, string>();
             param.Add("aid", aid.ToString());
-            var data = BiliTool.UrlContact("", param, true);
-            string content = await BiliTool.PostContentToWebAsync(Api.ACCOUNT_VIEWLATER_ADD, data);
+            var data = BiliFactory.UrlContact("", param, true);
+            string content = await BiliClient.PostContentToWebAsync(Api.ACCOUNT_VIEWLATER_ADD, data);
             if (!string.IsNullOrEmpty(content))
             {
                 var jobj = JObject.Parse(content);
@@ -479,8 +486,8 @@ namespace BiliWpf.Services
         {
             var param = new Dictionary<string, string>();
             param.Add("aid", string.Join(',', aids));
-            var data = BiliTool.UrlContact("", param, true);
-            string content = await BiliTool.PostContentToWebAsync(Api.ACCOUNT_VIEWLATER_DEL, data);
+            var data = BiliFactory.UrlContact("", param, true);
+            string content = await BiliClient.PostContentToWebAsync(Api.ACCOUNT_VIEWLATER_DEL, data);
             if (!string.IsNullOrEmpty(content))
             {
                 var jobj = JObject.Parse(content);
@@ -498,8 +505,8 @@ namespace BiliWpf.Services
         {
             var param = new Dictionary<string, string>();
             param.Add("vmid", uid.ToString());
-            string url = BiliTool.UrlContact(Api.ACCOUNT_USER_SPACE, param, true);
-            var data = await BiliTool.ConvertEntityFromWebAsync<UserResponse>(url);
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_USER_SPACE, param, true);
+            var data = await BiliClient.ConvertEntityFromWebAsync<UserResponse>(url);
             return data;
         }
 
@@ -514,8 +521,8 @@ namespace BiliWpf.Services
             var param = new Dictionary<string, string>();
             param.Add("vmid", uid.ToString());
             param.Add("pn", page.ToString());
-            string url = BiliTool.UrlContact(Api.ACCOUNT_USER_ARCHIVE, param, true);
-            var data = await BiliTool.ConvertEntityFromWebAsync<ArchiveResponse>(url);
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_USER_ARCHIVE, param, true);
+            var data = await BiliClient.ConvertEntityFromWebAsync<ArchiveResponse>(url);
             return data;
         }
 
@@ -527,8 +534,8 @@ namespace BiliWpf.Services
         {
             var param = new Dictionary<string, string>();
             param.Add("business", "reply");
-            string url = BiliTool.UrlContact(Api.ACCOUNT_EMOJI_PANEL, param, true);
-            var items = await BiliTool.ConvertEntityFromWebAsync<List<EmojiReplyContainer>>(url, "data.packages");
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_EMOJI_PANEL, param, true);
+            var items = await BiliClient.ConvertEntityFromWebAsync<List<EmojiReplyContainer>>(url, "data.packages");
             return items;
         }
         /// <summary>
@@ -537,8 +544,8 @@ namespace BiliWpf.Services
         /// <returns></returns>
         public async Task<MyMessage> GetMyUnreadMessageAsync()
         {
-            string url = BiliTool.UrlContact(Api.ACCOUNT_UNREAD, null, true);
-            var data = await BiliTool.ConvertEntityFromWebAsync<MyMessage>(url);
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_UNREAD, null, true);
+            var data = await BiliClient.ConvertEntityFromWebAsync<MyMessage>(url);
             return data;
         }
         /// <summary>
@@ -551,9 +558,9 @@ namespace BiliWpf.Services
         {
             var param = new Dictionary<string, string>();
             param.Add("pn", page.ToString());
-            param.Add("vmid", BiliTool.mid);
-            string url = BiliTool.UrlContact(Api.ACCOUNT_RELATION_FANS, param, true);
-            var response = await BiliTool.ConvertEntityFromWebAsync<FanResponse>(url);
+            param.Add("vmid", BiliClient.Mid);
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_RELATION_FANS, param, true);
+            var response = await BiliClient.ConvertEntityFromWebAsync<FanResponse>(url);
             return response;
         }
         /// <summary>
@@ -563,9 +570,9 @@ namespace BiliWpf.Services
         public async Task<List<FollowTag>> GetMyFollowTagsAsync()
         {
             var param = new Dictionary<string, string>();
-            param.Add("vmid", BiliTool.mid);
-            string url = BiliTool.UrlContact(Api.ACCOUNT_RELATION_FOLLOW_TAGS, param, true);
-            var data = await BiliTool.ConvertEntityFromWebAsync<List<FollowTag>>(url);
+            param.Add("vmid", BiliClient.Mid);
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_RELATION_FOLLOW_TAGS, param, true);
+            var data = await BiliClient.ConvertEntityFromWebAsync<List<FollowTag>>(url);
             return data;
         }
         /// <summary>
@@ -577,12 +584,12 @@ namespace BiliWpf.Services
         public async Task<List<RelationUser>> GetMyFollowUserAsync(int tagId, int pn)
         {
             var param = new Dictionary<string, string>();
-            param.Add("mid", BiliTool.mid);
+            param.Add("mid", BiliClient.Mid);
             param.Add("ps", "50");
             param.Add("pn", pn.ToString());
             param.Add("tagid", tagId.ToString());
-            string url = BiliTool.UrlContact(Api.ACCOUNT_RELATION_FOLLOW_DETAIL, param, true);
-            var data = await BiliTool.ConvertEntityFromWebAsync<List<RelationUser>>(url);
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_RELATION_FOLLOW_DETAIL, param, true);
+            var data = await BiliClient.ConvertEntityFromWebAsync<List<RelationUser>>(url);
             return data;
         }
         /// <summary>
@@ -597,8 +604,8 @@ namespace BiliWpf.Services
             var param = new Dictionary<string, string>();
             param.Add("media_id", listId.ToString());
             param.Add("resources", $"{aid}:{videoType}");
-            var req = BiliTool.UrlContact("", param, true);
-            var data = await BiliTool.PostContentToWebAsync(Api.ACCOUNT_FAVORITE_VIDEO_DELETE, req);
+            var req = BiliFactory.UrlContact("", param, true);
+            var data = await BiliClient.PostContentToWebAsync(Api.ACCOUNT_FAVORITE_VIDEO_DELETE, req);
             if (!string.IsNullOrEmpty(data))
             {
                 var jobj = JObject.Parse(data);
@@ -615,8 +622,8 @@ namespace BiliWpf.Services
         {
             var param = new Dictionary<string, string>();
             param.Add("reply_time", replyTime.ToString());
-            string url = BiliTool.UrlContact(Api.ACCOUNT_FEEDBACK_REPLY, param, true);
-            var response = await BiliTool.ConvertEntityFromWebAsync<FeedReplyResponse>(url);
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_FEEDBACK_REPLY, param, true);
+            var response = await BiliClient.ConvertEntityFromWebAsync<FeedReplyResponse>(url);
             return response;
         }
         /// <summary>
@@ -630,8 +637,8 @@ namespace BiliWpf.Services
             var param = new Dictionary<string, string>();
             param.Add("id", id.ToString());
             param.Add("at_time", atTime.ToString());
-            string url = BiliTool.UrlContact(Api.ACCOUNT_FEEDBACK_AT, param, true);
-            var response = await BiliTool.ConvertEntityFromWebAsync<FeedAtResponse>(url);
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_FEEDBACK_AT, param, true);
+            var response = await BiliClient.ConvertEntityFromWebAsync<FeedAtResponse>(url);
             return response;
         }
         /// <summary>
@@ -645,10 +652,9 @@ namespace BiliWpf.Services
             var param = new Dictionary<string, string>();
             param.Add("id", id.ToString());
             param.Add("at_time", likeTime.ToString());
-            string url = BiliTool.UrlContact(Api.ACCOUNT_FEEDBACK_LIKE, param, true);
-            var response = await BiliTool.ConvertEntityFromWebAsync<FeedLikeResponse>(url);
+            string url = BiliFactory.UrlContact(Api.ACCOUNT_FEEDBACK_LIKE, param, true);
+            var response = await BiliClient.ConvertEntityFromWebAsync<FeedLikeResponse>(url);
             return response;
         }
-        */
     }
 }

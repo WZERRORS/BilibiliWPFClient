@@ -1,13 +1,22 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BiliWpf.Services.Models
+namespace BiliWpf.Sevices.Models
 {
-    public class UserData
+    public class Vip
+    {
+        public int type { get; set; }
+        public int status { get; set; }
+        public string due_date { get; set; }
+    }
+    public class Pendant
+    {
+        public string image { get; set; }
+    }
+    public class Me
     {
         public int mid { get; set; }
         public string name { get; set; }
@@ -56,8 +65,8 @@ namespace BiliWpf.Services.Models
 
         public override bool Equals(object obj)
         {
-            return obj is UserData data &&
-                   mid == data.mid;
+            return obj is Me me &&
+                   mid == me.mid;
         }
 
         public override int GetHashCode()
@@ -66,17 +75,6 @@ namespace BiliWpf.Services.Models
         }
     }
 
-    public class Vip
-    {
-        public int type { get; set; }
-        public int status { get; set; }
-        public string due_date { get; set; }
-    }
-
-    public class Pendant
-    {
-        public string image { get; set; }
-    }
 
     public class UserStat
     {
@@ -86,14 +84,12 @@ namespace BiliWpf.Services.Models
         public int black { get; set; }
         public int follower { get; set; }
     }
-
     public class SlimUserInfo
     {
         public int uid { get; set; }
         public string uname { get; set; }
         public string face { get; set; }
     }
-
     public class LevelInfo
     {
         public int current_level { get; set; }
@@ -111,7 +107,6 @@ namespace BiliWpf.Services.Models
         public int sys_msg { get; set; }
         public int up { get; set; }
     }
-
     public class OfficialVerify
     {
         public int type { get; set; }

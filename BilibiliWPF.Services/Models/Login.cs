@@ -9,20 +9,12 @@ using System.Threading.Tasks;
 
 namespace BiliWpf.Services.Models
 {
-    public struct TokenInfo
+    public class TokenInfo
     {
-        public long Mid { get; set; }
-        public string AccessToken { get; set; }
-        public string RefreshToken { get; set; }
-        public int Expires { get; set; }
-        
-        public TokenInfo(JObject jobj)
-        {
-            Mid = jobj.Value<long>("mid");
-            AccessToken = jobj.Value<string>("access_token");
-            RefreshToken = jobj.Value<string>("refresh_token");
-            Expires = jobj.Value<int>("expires_in");
-        }
+        public long mid { get; set; }
+        public string access_token { get; set; }
+        public string refresh_token { get; set; }
+        public int expires_in { get; set; }
     }
 
     public class Cookies
@@ -33,7 +25,7 @@ namespace BiliWpf.Services.Models
         public int expires { get; set; }
     }
 
-    public struct CookieInfo
+    public class CookieInfo
     {
         public List<Cookies> cookies { get; set; }
         public List<string> domains { get; set; }
@@ -41,52 +33,20 @@ namespace BiliWpf.Services.Models
 
     public class LoginResult
     {
-        public int Status { get; set; }
-        public TokenInfo Token { get; set; }
-        public CookieInfo Cookie { get; set; }
-        public List<string> SSO { get; set; }
-        public string Url { get; set; }
-        public long Mid { get; set; }
-        public string AccessToken { get; set; }
-        public string RefreshToken { get; set; }
-        public int Expires { get; set; }
-
-        public LoginResult(JObject jobj)
-        {
-            Status = jobj.Value<int>("status");
-            Token = new TokenInfo(jobj.Value<JObject>("token_info"));
-            Cookie = JsonConvert.DeserializeObject<CookieInfo>(jobj["cookie_info"].ToString());
-            SSO = JsonConvert.DeserializeObject<List<string>>(jobj["sso"].ToString());
-            Url = jobj.Value<string>("url");
-            Mid = jobj.Value<long>("mid");
-            AccessToken = jobj.Value<string>("access_token");
-            RefreshToken = jobj.Value<string>("refresh_token");
-            Expires = jobj.Value<int>("expires_in");
-        }
+        public int status { get; set; }
+        public TokenInfo token_info { get; set; }
+        public CookieInfo cookie_info { get; set; }
+        public List<string> sso { get; set; }
+        public string url { get; set; }
+        public long mid { get; set; }
+        public string access_token { get; set; }
+        public string refresh_token { get; set; }
+        public int expires_in { get; set; }
     }
 
     public class LoginCallback
     {
         public LoginResultType Status { get; set; }
         public string Url { get; set; }
-    }
-
-    public class TokenPackage
-    {
-        public string AccessToken { get; set; }
-        public string RefreshToken { get; set; }
-        public int Expiry { get; set; }
-        public TokenPackage()
-        {
-            AccessToken = "";
-            RefreshToken = "";
-            Expiry = 0;
-        }
-        public TokenPackage(string acc, string refe, int exp)
-        {
-            AccessToken = acc;
-            RefreshToken = refe;
-            Expiry = exp;
-        }
     }
 }
