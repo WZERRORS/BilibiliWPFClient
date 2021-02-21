@@ -27,7 +27,7 @@ namespace BiliWpf.Services
             string base64String;
 
             string param = UrlContact("").TrimStart('?');
-            string content = await BiliClient.Current.PostContentToWebAsync(Api.PASSPORT_KEY_ENCRYPT, param);
+            string content = await BiliClient.PostContentToWebAsync(Api.PASSPORT_KEY_ENCRYPT, param);
             JObject jobj = JObject.Parse(content);
             string str = jobj["data"]["hash"].ToString();
             string str1 = jobj["data"]["key"].ToString();

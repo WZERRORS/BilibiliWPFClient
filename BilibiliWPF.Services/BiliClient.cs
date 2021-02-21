@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,15 +13,13 @@ namespace BiliWpf.Services
 {
     public class BiliClient
     {
-        public static readonly BiliClient Current = new BiliClient();
-        private string sid = "";
-        private string mid = "";
-        private HttpClient _httpClient;
-        private AccountService _account;
+        static HttpClient _httpClient;
+        public static string Sid { get; set; }
+        public static string Mid { get; set; }
+        public static AccountService Account { get; set; }
         public static string AccessToken { get; set; }
-        public static AccountService Account { get { return Current._account; } }
 
-        public BiliClient(string accessToken = "", string refreshToken = "", int expiry = 0)
+        static BiliClient()
         {
             _httpClient = new HttpClient();
 
@@ -32,9 +31,9 @@ namespace BiliWpf.Services
                 RequestUri = new Uri("http://www.bilibili.com/")
             }).Result.EnsureSuccessStatusCode();
 
-            var package = new TokenPackage(accessToken, refreshToken, expiry);
-            AccessToken = accessToken;
-            _account = new AccountService(package);
+            var package = new TokenPackage("", "", 0);
+            AccessToken = "";
+            Account = new AccountService(package);
         }
 
         /// <summary>
@@ -44,7 +43,7 @@ namespace BiliWpf.Services
         /// <param name="total">标识返回整个数据包还是提取path的内容</param>
         /// <param name="path">提取的路径</param>
         /// <returns></returns>
-        public async Task<string> GetStringFromWebAsync(string url)
+        public static async Task<string> GetStringFromWebAsync(string url)
         {
             var response = await _httpClient.GetAsync(new Uri(url));
             if(response.IsSuccessStatusCode)
@@ -65,7 +64,66 @@ namespace BiliWpf.Services
             }
         }
 
-        public async Task<JToken> GetJsonFromWebAsync(string url, bool total = false, string path = "data")
+        public static async Task<string> GetStringFromWebAsync(string url, bool total = false, string path = "data", bool needReferer = false)
+        {
+            try
+            {
+                //client.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19041");
+                var uri = new Uri(url);
+                if (needReferer)
+                    _httpClient.DefaultRequestHeaders.Referrer = new Uri(uri.Scheme + "://" + uri.Host);
+                var response = await _httpClient.GetAsync(new Uri(url));
+                if (response.IsSuccessStatusCode)
+                {
+                    string res = await response.Content.ReadAsStringAsync();
+                    if (total)
+                        return res;
+                    var jobj = JObject.Parse(res);
+                    string content = string.Empty;
+                    if (jobj.SelectToken(path) != null)
+                        content = jobj.SelectToken(path).ToString();
+                    else
+                        content = res;
+                    return content;
+                }
+                else if (response.StatusCode == HttpStatusCode.TemporaryRedirect || response.StatusCode == HttpStatusCode.MovedPermanently)
+                {
+                    string tempUrl = response.Headers.Location.AbsoluteUri;
+                    return await GetStringFromWebAsync(tempUrl, total, path);
+                }
+                else
+                {
+                    //_logger.Warn($"请求数据异常(Text)：URL: {url}; Message: {await response.Content.ReadAsStringAsync()}");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                //_logger.Error($"请求出现异常:{url}", ex);
+                return null;
+            }
+        }
+
+        public static async Task<T> ConvertEntityFromWebAsync<T>(string url, string path = "data", bool needReferer = false) where T : class
+        {
+            
+            string response = await GetStringFromWebAsync(url);
+            response = JObject.Parse(response)[path].ToString();
+            if (!string.IsNullOrEmpty(response))
+            {
+                try
+                {
+                    return JsonConvert.DeserializeObject<T>(response);
+                }
+                catch (Exception)
+                {
+                    //_logger.Error($"数据转化失败: {nameof(T)}", ex);
+                }
+            }
+            return null;
+        }
+
+        public static async Task<JToken> GetJsonFromWebAsync(string url, bool total = false, string path = "data")
         {
             var response = await _httpClient.GetAsync(new Uri(url));
             if (response.IsSuccessStatusCode)
@@ -90,7 +148,7 @@ namespace BiliWpf.Services
             }
         }
 
-        public async Task<T> GetObjectFromWebAsync<T>(string url, Type type) where T : class
+        public static async Task<T> GetObjectFromWebAsync<T>(string url, Type type) where T : class
         {
             string response = await GetStringFromWebAsync(url);
             if (!string.IsNullOrEmpty(response))
@@ -107,7 +165,7 @@ namespace BiliWpf.Services
             return null;
         }
 
-        public async Task<Stream> GetStreamFromWebAsync(string url)
+        public static async Task<Stream> GetStreamFromWebAsync(string url)
         {
             var response = await _httpClient.GetAsync(new Uri(url));
             if (response.IsSuccessStatusCode)
@@ -120,11 +178,11 @@ namespace BiliWpf.Services
             }
         }
 
-        public async Task<string> PostContentToWebAsync(string url, string content)
+        public static async Task<string> PostContentToWebAsync(string url, string content)
         {
-            if (url.Contains("oauth2/login") && !string.IsNullOrEmpty(sid))
+            if (url.Contains("oauth2/login") && !string.IsNullOrEmpty(Sid))
             {
-                SetCookie("bilibili.com", "sid", sid);
+                SetCookie("bilibili.com", "sid", Sid);
             }
             var response = await _httpClient.PostAsync(new Uri(url), new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded"));
             if (response.IsSuccessStatusCode)
@@ -140,12 +198,12 @@ namespace BiliWpf.Services
             return "";
         }
 
-        public void SetCookie(string url, string name, string value, long expire)
+        public static void SetCookie(string url, string name, string value, long expire)
         {
             Application.SetCookie(new Uri(url), string.Format("{0}={1}; Expires={2}", name, value, BiliFactory.GetFormatDate(new DateTime(expire))));
         }
 
-        public void SetCookie(string url, string name, string value)
+        public static void SetCookie(string url, string name, string value)
         {
             Application.SetCookie(new Uri(url), string.Format("{0}={1}", name, value));
         }
