@@ -21,6 +21,13 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
+        <Grid Grid.RowSpan="2"
+              Grid.Column="1">
+            <muxc:Frame x:Name="contentFrame" />
+            <muxc:ProgressRing Height="48"
+                               Width="48"
+                               x:Name="contentFramePgRing" />
+        </Grid>
         <muxc:ThemeShadowChrome Grid.RowSpan="2"
                                 Grid.ColumnSpan="2"
                                 x:Name="navigationViewShadowChrome"
@@ -58,8 +65,8 @@
                         </Button.BorderBrush>
                         <Viewbox Width="18"
                                  Height="18">
-                            <muxc:SymbolIcon Symbol="GlobalNavigationButton" 
-                                             Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}"/>
+                            <muxc:SymbolIcon Symbol="GlobalNavigationButton"
+                                             Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />
                         </Viewbox>
                     </Button>
                     <Button Grid.Row="2"
@@ -83,7 +90,7 @@
                     <StackPanel Grid.Row="3">
                         <RadioButton Style="{StaticResource GlobalNavigationRadioButtonStyle}"
                                      helpers:ButtonHelper.IconPath="&#xE80F;"
-                                     Content="首页"/>
+                                     Content="首页" />
                         <RadioButton Style="{StaticResource GlobalNavigationRadioButtonStyle}"
                                      helpers:ButtonHelper.IconPath="&#xE95A;"
                                      Content="动态" />
@@ -94,14 +101,6 @@
                 </Grid>
             </Border>
         </muxc:ThemeShadowChrome>
-
-        <Grid Grid.RowSpan="2" 
-              Grid.Column="1">
-            <muxc:Frame x:Name="contentFrame" />
-            <muxc:ProgressRing Height="48"
-                               Width="48"
-                               x:Name="contentFramePgRing" />
-        </Grid>
 
         <controls:WindowCaption Grid.Column="1"
                                 Grid.ColumnSpan="2" 

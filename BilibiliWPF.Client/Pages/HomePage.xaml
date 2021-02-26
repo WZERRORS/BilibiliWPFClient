@@ -9,6 +9,11 @@
       d:DesignHeight="450"
       d:DesignWidth="800"
       Title="HomePage">
+    <Page.Resources>
+        <DataTemplate x:Key="VideoCardTemplate">
+            <Grid />
+        </DataTemplate>
+    </Page.Resources>
     <Grid>
         <muxc:ItemsRepeaterScrollHost>
             <ScrollViewer>
@@ -19,19 +24,10 @@
                                 Value="Disabled" />
                         <Setter Property="VerticalScrollBarVisibility"
                                 Value="Auto" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Source={StaticResource uniformGridLayout}, Path=Orientation}"
-                                         Value="Vertical">
-                                <Setter Property="HorizontalScrollBarVisibility"
-                                        Value="Auto" />
-                                <Setter Property="VerticalScrollBarVisibility"
-                                        Value="Disabled" />
-                            </DataTrigger>
-                        </Style.Triggers>
                     </Style>
                 </ScrollViewer.Style>
                 <muxc:ItemsRepeater x:Name="UniformGridLayoutRepeater"
-                                    ItemTemplate="{StaticResource ContactListViewTemplate}"
+                                    ItemTemplate="{StaticResource VideoCardTemplate}"
                                     ItemsSource="{Binding}">
                     <muxc:ItemsRepeater.Layout>
                         <muxc:UniformGridLayout MinItemWidth="240"
