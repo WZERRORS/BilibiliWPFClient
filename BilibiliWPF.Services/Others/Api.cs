@@ -485,5 +485,9 @@ namespace BiliWpf.Services
         #region 其它
         public const string OTHER_ZONE = _apiBase + "/x/web-interface/zone";
         #endregion
+
+        #region 个性装扮
+        public const string SKIN_PACKAGE = _appBase + "/x/resource/show/skin";
+        #endregion
     }
 }

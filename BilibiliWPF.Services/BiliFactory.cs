@@ -2,7 +2,9 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
@@ -20,7 +22,7 @@ namespace BiliWpf.Services
         public static ApiKeyInfo WebVideoKey = new ApiKeyInfo("84956560bc028eb7", "94aba54af9065f71de72f5508f1cd42e");
         public static ApiKeyInfo VideoKey = new ApiKeyInfo("", "1c15888dc316e05a15fdd0a02ed6584f");
         public static ApiKeyInfo IosKey = new ApiKeyInfo("4ebafd7c4951b366", "8cb98205e9b2ad3669aad0fce12a4c13");
-        public const string BuildNumber = "5520400";
+        public const string BuildNumber = "6082000";
 
         public static async Task<string> EncryptAsPasswordAsync(string password)
         {
@@ -102,6 +104,7 @@ namespace BiliWpf.Services
             }
             stringBuilder.Append(apiKeyInfo.Secret);
             result = MD5Tool.GetMd5String(stringBuilder.ToString()).ToLower();
+            System.Diagnostics.Debug.WriteLine("sign=" + result);
             return result;
         }
 
@@ -185,6 +188,25 @@ namespace BiliWpf.Services
             else
                 result = Math.Round(number / 10000.0, 1).ToString() + "万";
             return result;
+        }
+
+        public void DownloadFile(string serverFilePath, string targetPath)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(serverFilePath);
+            WebResponse respone = request.GetResponse();
+            Stream netStream = respone.GetResponseStream();
+            using (Stream fileStream = new FileStream(targetPath, FileMode.Create))
+            {
+                byte[] read = new byte[1024];
+                int realReadLen = netStream.Read(read, 0, read.Length);
+                while (realReadLen > 0)
+                {
+                    fileStream.Write(read, 0, realReadLen);
+                    realReadLen = netStream.Read(read, 0, read.Length);
+                }
+                netStream.Close();
+                fileStream.Close();
+            }
         }
     }
 

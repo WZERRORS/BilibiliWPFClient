@@ -46,6 +46,10 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
+                    <Image x:Name="skinSideBg"
+                           Grid.RowSpan="4"
+                           Stretch="UniformToFill" />
+
                     <Button Style="{StaticResource NavigateBackButtonStyle}" />
                     <Border Background="#19000000"
                             VerticalAlignment="Bottom"
