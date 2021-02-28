@@ -19,7 +19,10 @@ namespace BiliWpf.Services
         public static string Sid { get; set; }
         public static string Mid { get; set; }
         public static AccountService Account { get; set; }
+        public static SkinService Skin { get; set; }
+        public static VideoService Video { get; set; }
         public static string AccessToken { get; set; }
+        public static string FileCache;
 
         static BiliClient()
         {
@@ -36,6 +39,8 @@ namespace BiliWpf.Services
             var package = new TokenPackage("", "", 0);
             AccessToken = "";
             Account = new AccountService(package);
+
+            Directory.CreateDirectory(FileCache = Environment.CurrentDirectory + "\\FileCache");
         }
 
         /// <summary>
@@ -254,6 +259,42 @@ namespace BiliWpf.Services
         public static bool GetBoolSetting(Settings key, bool defaultValue = true)
         {
             return Convert.ToBoolean(GetLocalSetting(key, defaultValue.ToString()));
+        }
+
+        public static string GetFileAsCacheAsync(string url)
+        {
+            string path = FileCache + "\\" + url.Substring(url.LastIndexOf('/'));
+            if (File.Exists(path))
+            {
+                return path;
+            }
+            try
+            {
+                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+                //获取WebResponse对象
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                //直到request.GetResponse()程序才开始向目标网页发送Post请求
+                //关键：获取Stream对象 (http请求的文件流对象)
+                Stream responseStream = response.GetResponseStream();
+                //创建本地文件写入流
+                Stream stream = new FileStream(path, FileMode.Create);
+                //分段写入本地文件 
+                byte[] bArr = new byte[1024];
+                int size = responseStream.Read(bArr, 0, (int)bArr.Length);
+                while (size > 0)
+                {
+                    stream.Write(bArr, 0, size);
+                    size = responseStream.Read(bArr, 0, (int)bArr.Length);
+                }
+                stream.Close();
+                responseStream.Close();
+                return path;
+            }
+            catch (IOException ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+                return null;
+            }
         }
     }
 }

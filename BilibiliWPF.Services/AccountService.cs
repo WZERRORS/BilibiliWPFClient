@@ -14,6 +14,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using Windows.Security.Cryptography.Core;
 using Windows.Storage.Streams;
@@ -26,7 +27,20 @@ namespace BiliWpf.Services
         private string _refreshToken;
         private string _userId;
         public int _expiry;
-        public Me Me;
+        public Me _me;
+
+        public Me Me
+        {
+            get { return _me; }
+            set
+            {
+                _me = value;
+                if (MeUpdate != null)
+                    MeUpdate.Invoke(this, new EventArgs());
+            }
+        }
+
+        public event EventHandler MeUpdate;
 
         public AccountService(TokenPackage p)
         {

@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ModernWpf.Media.Animation;
+using BiliWpf.Services;
 
 namespace BiliWpf.Client.UserControls
 {
@@ -30,12 +31,24 @@ namespace BiliWpf.Client.UserControls
         {
             InitializeComponent();
 
-            contentFrame.Navigated += (sender, args) => contentFramePgRing.Visibility = Visibility.Collapsed;
-        }
+            BiliClient.Account.MeUpdate += (sender, args) =>
+            {
+                var data = BiliClient.Account.Me;
 
-        public void SetCurrentUserData(Me me)
-        {
-            contentFrame.Navigate(typeof(HomePage), null, new DrillInNavigationTransitionInfo());
+                Task.Run(() =>
+                {
+                    string path = BiliClient.GetFileAsCacheAsync(data.face);
+                    data.face_path = path;
+
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        imageUserFace.Source = new BitmapImage(new Uri(path, UriKind.RelativeOrAbsolute));
+                    });
+                });
+            };
+            RenderOptions.SetBitmapScalingMode(imageUserFace, BitmapScalingMode.Fant);
+            contentFrame.
+            contentFrame.Navigated += (sender, args) => contentFramePgRing.Visibility = Visibility.Collapsed;
         }
     }
 }

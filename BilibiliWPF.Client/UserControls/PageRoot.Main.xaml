@@ -84,8 +84,8 @@
                         </Button.BorderBrush>
                         <Grid x:Name="userDataDisplayGrid">
                             <Image x:Name="imageUserFace"
-                                   Width="36"
-                                   Margin="6,15"
+                                   Width="32"
+                                   Margin="8,15"
                                    VerticalAlignment="Top"
                                    helpers:EllipseClipHelper.IsClipping="True" />
                         </Grid>

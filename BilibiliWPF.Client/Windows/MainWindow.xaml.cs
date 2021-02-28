@@ -51,8 +51,6 @@ namespace BiliWpf.Client.Windows
                 {
                     if (BiliClient.Account.Me == null)
                         this.Close();
-                    else
-                        navigationRoot.SetCurrentUserData(BiliClient.Account.Me);
 
                 };
 

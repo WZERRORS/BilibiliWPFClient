@@ -18,11 +18,18 @@ namespace BiliWpf.Client.Pages
     /// <summary>
     /// Interaction logic for AccountPage.xaml
     /// </summary>
-    public partial class AccountPage : Page
+    public partial class AccountPage : ModernWpf.Controls.Page
     {
         public AccountPage()
         {
             InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            var data = e.ExtraData as 
         }
     }
 }

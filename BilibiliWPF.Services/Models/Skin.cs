@@ -9,6 +9,7 @@ namespace BiliWpf.Services.Models
     public class Skin
     {
         public UserEquip user_equip { get; set; }
+        public LoadEquip load_equip { get; set; }
     }
 
     public class UserEquip
@@ -20,6 +21,14 @@ namespace BiliWpf.Services.Models
         public string package_url { get; set; }
         public string package_md5 { get; set; }
         public Data data { get; set; }
+    }
+
+    public class LoadEquip
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public int ver { get; set; }
+        public string loading_url { get; set; }
     }
 
     public class Data

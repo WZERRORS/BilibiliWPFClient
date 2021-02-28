@@ -33,6 +33,7 @@ namespace BiliWpf.Sevices.Models
             }
             set { _face = value; }
         }
+        public string face_path;
         public int sex { get; set; }
         public int level { get; set; }
         public int rank { get; set; }

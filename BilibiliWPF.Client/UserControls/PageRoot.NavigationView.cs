@@ -1,4 +1,7 @@
-﻿using ModernWpf.Controls.Primitives;
+﻿using BiliWpf.Client.Pages;
+using BiliWpf.Services;
+using ModernWpf.Controls.Primitives;
+using ModernWpf.Media.Animation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,6 +71,14 @@ namespace BiliWpf.Client.UserControls
             IsExpanded = false;
         }
 
+        private void AccountDetail_Click(object sender, RoutedEventArgs e)
+        {
+            if (BiliClient.Account.Me == null)
+                return;
+
+            contentFrame.Navigate(new AccountPage(), null, new DrillInNavigationTransitionInfo());
+        }
+
         private void BeginAnimation_NavigationViewExpand()
         {
             if (IsConstant)
@@ -76,7 +87,7 @@ namespace BiliWpf.Client.UserControls
             }
 
             var isMaximized = Application.Current.MainWindow.WindowState == WindowState.Maximized;
-            Duration duration = new Duration(TimeSpan.FromMilliseconds(isMaximized ? 350 : 200));
+            Duration duration = new Duration(TimeSpan.FromMilliseconds(isMaximized ? 350 : 240));
             navigationViewRoot.BeginAnimation(
                 WidthProperty,
                 new DoubleAnimation(
@@ -105,12 +116,12 @@ namespace BiliWpf.Client.UserControls
                 WidthProperty,
                 new DoubleAnimation(
                     imageUserFace.Width,
-                    IsExpanded ? 60 : 36,
+                    IsExpanded ? 60 : 32,
                     duration
                 )
                 {
                     AccelerationRatio = 0.75d,
-                    EasingFunction = new CubicEase() { EasingMode = EasingMode.EaseOut }
+                    EasingFunction = new QuarticEase() { EasingMode = EasingMode.EaseOut }
                 }
             );
             imageUserFace.BeginAnimation(
