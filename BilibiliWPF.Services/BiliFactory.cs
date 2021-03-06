@@ -123,6 +123,7 @@ namespace BiliWpf.Services
             }
             param = param.TrimEnd('&');
             string sign = useWeb ? GetSign(param, WebVideoKey) : GetSign(param);
+            System.Diagnostics.Debug.WriteLine("appkey=" + AndroidKey.Appkey + "&mobi_app=android&platform=android&access_key=" + BiliClient.AccessToken + "&sign=" + sign);
             param += $"&sign={sign}";
             return !string.IsNullOrEmpty(_baseUrl) ? _baseUrl + $"?{param}" : param;
         }

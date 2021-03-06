@@ -6,6 +6,17 @@ using System.Threading.Tasks;
 
 namespace BiliWpf.Services.Models
 {
+    public class FavouriteCollection
+    {
+        public int id { get; set; }
+        public int mid { get; set; }
+        public string title { get; set; }
+        public string cover { get; set; }
+        public int count { get; set; }
+        public int type { get; set; }
+        public int is_public { get; set; }
+        public bool is_default { get; set; }
+    }
 
     public class FavoriteItem
     {

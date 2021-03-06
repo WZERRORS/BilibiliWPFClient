@@ -15,6 +15,7 @@
                 <ResourceDictionary Source="/BilibiliWPF.Controls;component/ResourceDictionaries/PasswordBox.xaml" />
                 <ResourceDictionary Source="/BilibiliWPF.Controls;component/ResourceDictionaries/RadioButtons.xaml" />
                 <ResourceDictionary Source="/BilibiliWPF.Controls;component/ResourceDictionaries/Fonts.xaml" />
+                <ResourceDictionary Source="/BilibiliWPF.Controls;component/ResourceDictionaries/Borders.xaml" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->

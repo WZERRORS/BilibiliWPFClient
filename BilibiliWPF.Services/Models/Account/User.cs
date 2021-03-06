@@ -1,9 +1,5 @@
 ﻿using BiliWpf.Sevices.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BiliWpf.Services.Models.Account
 {
@@ -11,6 +7,44 @@ namespace BiliWpf.Services.Models.Account
     {
         public User card { get; set; }
         public ArchiveResponse archive { get; set; }
+        public SpaceImages images { get; set; }
+        public LiveRoom live { get; set; }
+        public ItemArray<VideoSimple> season { get; set; }
+        public ItemArray<FansDress> fans_dress { get; set; }
+        public ItemArray<FavouriteCollection> favourite2 { get; set; }
+    }
+
+    public class SpaceImages
+    {
+        public string imgUrl { get; set; }
+        public bool has_grab { get; set; }
+        public bool show_reset { get; set; }
+        public bool goods_available { get; set; }
+        public SpaceGrab grab { get; set; }
+    }
+
+    public struct SpaceGrab
+    {
+        public int grab_id { get; set; }
+        public int image_id { get; set; }
+        public string small_image { get; set; }
+        public string large_image { get; set; }
+        public string fans_label { get; set; }
+        public string fans_number { get; set; }
+    }
+    
+    public class ItemArray<T>
+    {
+        public int count { get; set; }
+        public List<T> item { get; set; }
+    }
+
+    public class VideoSimple
+    {
+        public string title { get; set; }
+        public string cover { get; set; }
+        public string param { get; set; }
+        public string @goto { get; set; }
     }
 
     public class User
@@ -41,9 +75,11 @@ namespace BiliWpf.Services.Models.Account
         public int end_time { get; set; }
         public string silence_url { get; set; }
         public Likes likes { get; set; }
+        public OfficialVerify official_verify { get; set; }
         public string pendant_url { get; set; }
         public string pendant_title { get; set; }
         public Relation relation { get; set; }
+        public bool is_deleted { get; set; }
     }
     
     public class Likes

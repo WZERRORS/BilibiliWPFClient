@@ -42,4 +42,14 @@ namespace BiliWpf.Services.Models
         public bool tail_icon_ani { get; set; }
         public string tail_icon_ani_mode { get; set; }
     }
+
+    public class FansDress
+    {
+        public string grab_title { get; set; }
+        public int grab_id { get; set; }
+        public int image_id { get; set; }
+        public string fans_number { get; set; }
+        public string title_color { get; set; }
+        public string title_bg_image { get; set; }
+    }
 }

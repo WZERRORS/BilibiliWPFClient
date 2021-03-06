@@ -105,6 +105,8 @@ namespace BiliWpf.Services
                         TokenChanged?.Invoke(this, package);
                         result.Status = LoginResultType.Success;
                         await SSO();
+
+                        await GetUserSpaceAsync(286725648);
                     }
                     else if (code == -2100)
                     {

@@ -7,7 +7,7 @@
            xmlns:muxc="http://schemas.modernwpf.com/2019"
            xmlns:controls="clr-namespace:BiliWpf.Controls;assembly=BilibiliWPF.Controls"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="720" d:DesignWidth="1032"
       Title="AccountPage">
 
     <Grid>
@@ -16,8 +16,32 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <controls:AnimatedScrollViewer Grid.RowSpan="2">
-            <Grid />
+        <controls:AnimatedScrollViewer Grid.RowSpan="2"
+                                       VerticalContentAlignment="Stretch"
+                                       HorizontalContentAlignment="Stretch">
+            <muxc:SimpleStackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+
+                    <Image x:Name="SpaceTopPhoto"
+                           VerticalAlignment="Top" />
+                    <muxc:ThemeShadowChrome Depth="8"
+                                            Margin="20,0"
+                                            Grid.RowSpan="2"
+                                            VerticalAlignment="Bottom">
+                        <Grid Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+                              Height="100">
+                            <Image Margin="8"
+                                   HorizontalAlignment="Left"
+                                   Height="100"
+                                   Width="100"/>
+                        </Grid>
+                    </muxc:ThemeShadowChrome>
+                </Grid>
+            </muxc:SimpleStackPanel>
         </controls:AnimatedScrollViewer>
         <muxc:ThemeShadowChrome Depth="16"
                                 Visibility="Collapsed"
