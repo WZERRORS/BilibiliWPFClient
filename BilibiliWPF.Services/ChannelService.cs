@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BiliBili_Lib.Service
+namespace BiliWpf.Services
 {
     public class ChannelService
     {

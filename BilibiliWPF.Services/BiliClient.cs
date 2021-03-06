@@ -261,7 +261,7 @@ namespace BiliWpf.Services
             return Convert.ToBoolean(GetLocalSetting(key, defaultValue.ToString()));
         }
 
-        public static string GetFileAsCacheAsync(string url)
+        public static async Task<string> GetFileAsCacheAsync(string url)
         {
             string path = FileCache + "\\" + url.Substring(url.LastIndexOf('/'));
             if (File.Exists(path))

@@ -77,7 +77,8 @@
                             Style="{StaticResource AnimatedButtonStyle}"
                             Background="Transparent"
                             BorderThickness="1"
-                            helpers:ButtonHelper.MouseHoverColor="{DynamicResource SystemControlBackgroundAltMediumLowBrush}">
+                            helpers:ButtonHelper.MouseHoverColor="{DynamicResource SystemControlBackgroundAltMediumLowBrush}"
+                            Click="Me_Click">
                         <Button.BorderBrush>
                             <brushes:RevealBorderBrush Color="Gray"
                                                        Opacity="75" />

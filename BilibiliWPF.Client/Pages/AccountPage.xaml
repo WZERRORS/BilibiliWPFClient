@@ -17,8 +17,7 @@
         </Grid.RowDefinitions>
 
         <controls:AnimatedScrollViewer Grid.RowSpan="2"
-                                       VerticalContentAlignment="Stretch"
-                                       HorizontalContentAlignment="Stretch">
+                                       VerticalScrollBarVisibility="Auto">
             <muxc:SimpleStackPanel>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -27,7 +26,11 @@
                     </Grid.RowDefinitions>
 
                     <Image x:Name="SpaceTopPhoto"
-                           VerticalAlignment="Top" />
+                           VerticalAlignment="Top"
+                           Stretch="Uniform"
+                           Height="{Binding RelativeSource={RelativeSource Self}, Path=ActualWidth,
+                                Converter={StaticResource MathConvert},
+                                ConverterParameter=(@VALUE*.3)}"/>
                     <muxc:ThemeShadowChrome Depth="8"
                                             Margin="20,0"
                                             Grid.RowSpan="2"

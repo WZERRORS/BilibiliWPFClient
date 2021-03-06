@@ -35,9 +35,9 @@ namespace BiliWpf.Client.UserControls
             {
                 var data = BiliClient.Account.Me;
 
-                Task.Run(() =>
+                Task.Run(async () =>
                 {
-                    string path = BiliClient.GetFileAsCacheAsync(data.face);
+                    string path = await BiliClient.GetFileAsCacheAsync(data.face);
                     data.face_path = path;
 
                     Application.Current.Dispatcher.Invoke(() =>
@@ -48,6 +48,12 @@ namespace BiliWpf.Client.UserControls
             };
             RenderOptions.SetBitmapScalingMode(imageUserFace, BitmapScalingMode.Fant);
             contentFrame.Navigated += (sender, args) => contentFramePgRing.Visibility = Visibility.Collapsed;
+        }
+
+        private void Me_Click(object sender, RoutedEventArgs e)
+        {
+            if (BiliClient.Account.Me != null)
+                contentFrame.Navigate(typeof(AccountPage), BiliClient.Account.Me.mid, new DrillInNavigationTransitionInfo());
         }
     }
 }

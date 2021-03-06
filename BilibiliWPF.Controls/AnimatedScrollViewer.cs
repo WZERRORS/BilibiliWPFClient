@@ -16,9 +16,8 @@ using System.Windows.Media.Animation;
 
 namespace BiliWpf.Controls
 {
-[TemplatePart(Name = "PART_AniVerticalScrollBar", Type = typeof(ScrollBar))]
-[TemplatePart(Name = "PART_AniHorizontalScrollBar", Type = typeof(ScrollBar))]
-
+    [TemplatePart(Name = "PART_AniVerticalScrollBar", Type = typeof(ScrollBar))]
+    [TemplatePart(Name = "PART_AniHorizontalScrollBar", Type = typeof(ScrollBar))]
     public class AnimatedScrollViewer : ScrollViewer
     {
         #region PART items
