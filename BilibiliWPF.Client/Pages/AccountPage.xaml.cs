@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BiliWpf.Services.Models.Account;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,7 +30,7 @@ namespace BiliWpf.Client.Pages
         {
             base.OnNavigatedTo(e);
 
-            var data = e.ExtraData as 
+            int uid = (int)e.ExtraData;
         }
     }
 }

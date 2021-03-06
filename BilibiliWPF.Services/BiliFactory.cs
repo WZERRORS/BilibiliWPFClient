@@ -37,40 +37,20 @@ namespace BiliWpf.Services
             string str3 = Regex.Match(str1, "BEGIN PUBLIC KEY-----(?<key>[\\s\\S]+)-----END PUBLIC KEY").Groups["key"].Value.Trim();
             byte[] numArray = Convert.FromBase64String(str3);
             AsymmetricKeyAlgorithmProvider asymmetricKeyAlgorithmProvider = AsymmetricKeyAlgorithmProvider.OpenAlgorithm(AsymmetricAlgorithmNames.RsaPkcs1);
-            System.Diagnostics.Debug.WriteLine("test1");
             CryptographicKey cryptographicKey = asymmetricKeyAlgorithmProvider.ImportPublicKey(WindowsRuntimeBufferExtensions.AsBuffer(numArray), 0);
-            System.Diagnostics.Debug.WriteLine("test2");
             var buffer = CryptographicEngine.Encrypt(cryptographicKey, WindowsRuntimeBufferExtensions.AsBuffer(Encoding.UTF8.GetBytes(str2)), null);
             base64String = Convert.ToBase64String(WindowsRuntimeBufferExtensions.ToArray(buffer));
+            /**
             try
             {
                 
-                
-                
-                /**
-                string param = UrlContact("").TrimStart('?');
-                string content = await BiliClient.Current.PostContentToWebAsync(Api.PASSPORT_KEY_ENCRYPT, param);
-                JObject jobj = JObject.Parse(content);
-
-                string str = jobj["data"]["hash"].ToString();
-                string str1 = jobj["data"]["key"].ToString();
-                string str2 = string.Concat(str, password);
-                string str3 = Regex.Match(str1, "BEGIN PUBLIC KEY-----(?<key>[\\s\\S]+)-----END PUBLIC KEY").Groups["key"].Value.Trim();
-                byte[] numArray = Convert.FromBase64String(str3);
-                System.Diagnostics.Debug.WriteLine(numArray.Length);
-                System.Diagnostics.Debug.WriteLine(Encoding.UTF8.GetString(numArray));
-                int len;
-                RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-                rsa.ImportRSAPublicKey(numArray, out len);
-                var cipherbytes = rsa.Encrypt(Encoding.UTF8.GetBytes(str2), false);
-                return Convert.ToBase64String(cipherbytes);
-                */
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex);
                 base64String = password;
             }
+            */
             return base64String;
         }
 

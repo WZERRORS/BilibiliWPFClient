@@ -76,7 +76,7 @@ namespace BiliWpf.Client.UserControls
             if (BiliClient.Account.Me == null)
                 return;
 
-            contentFrame.Navigate(new AccountPage(), null, new DrillInNavigationTransitionInfo());
+            contentFrame.Navigate(typeof(AccountPage), null, new DrillInNavigationTransitionInfo());
         }
 
         private void BeginAnimation_NavigationViewExpand()

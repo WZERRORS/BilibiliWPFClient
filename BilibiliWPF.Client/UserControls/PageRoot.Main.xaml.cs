@@ -47,7 +47,6 @@ namespace BiliWpf.Client.UserControls
                 });
             };
             RenderOptions.SetBitmapScalingMode(imageUserFace, BitmapScalingMode.Fant);
-            contentFrame.
             contentFrame.Navigated += (sender, args) => contentFramePgRing.Visibility = Visibility.Collapsed;
         }
     }
