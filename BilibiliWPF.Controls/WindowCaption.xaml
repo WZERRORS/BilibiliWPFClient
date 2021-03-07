@@ -25,6 +25,12 @@
             <ColumnDefinition Width="47" />
         </Grid.ColumnDefinitions>
 
+        <Border Grid.ColumnSpan="3"
+                Grid.Column="1"
+                Margin="1,0,0,0"
+                x:Name="Back"
+                Opacity="0"
+                Background="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
         <Border Background="#0000" 
                 MouseMove="DragArea_MouseMove"/>
         <Button Style="{StaticResource WindowCaptionButtonStyle}"

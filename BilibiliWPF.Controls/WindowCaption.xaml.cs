@@ -25,11 +25,33 @@ namespace BiliWpf.Controls
     /// </summary>
     public partial class WindowCaption : UserControl
     {
+        public static Dictionary<Window, WindowCaption> Captions = new Dictionary<Window, WindowCaption>();
+
         private Window window;
+        private bool _showBackground;
+        public bool ShowBackground
+        {
+            get { return _showBackground; }
+            set
+            {
+                if (value == _showBackground)
+                    return;
+
+                Back.BeginAnimation(OpacityProperty, new DoubleAnimation(
+                    Back.Opacity,
+                    value ? 1.0d : 0.0d,
+                    new Duration(TimeSpan.FromMilliseconds(300))
+                )
+                { EasingFunction = new CubicEase() });
+
+                _showBackground = value;
+            }
+        }
 
         public WindowCaption()
         {
             InitializeComponent();
+            Background = new SolidColorBrush(Colors.Transparent);
         }
 
         private void DragArea_MouseMove(object sender, MouseEventArgs e)
@@ -58,6 +80,7 @@ namespace BiliWpf.Controls
                 return;
             }
             this.window = window;
+            Captions.Add(window, this);
 
             // Use WindowProc as the callback method
             // to process all native window messages.

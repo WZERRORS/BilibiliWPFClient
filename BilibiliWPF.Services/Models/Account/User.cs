@@ -1,4 +1,5 @@
-﻿using BiliWpf.Sevices.Models;
+﻿using BiliWpf.Services.Models.Article;
+using BiliWpf.Sevices.Models;
 using System.Collections.Generic;
 
 namespace BiliWpf.Services.Models.Account
@@ -7,6 +8,7 @@ namespace BiliWpf.Services.Models.Account
     {
         public User card { get; set; }
         public ArchiveResponse archive { get; set; }
+        public ArticleResponse article { get; set; }
         public SpaceImages images { get; set; }
         public LiveRoom live { get; set; }
         public ItemArray<VideoSimple> season { get; set; }

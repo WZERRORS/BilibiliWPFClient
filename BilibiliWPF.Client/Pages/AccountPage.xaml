@@ -1,50 +1,226 @@
 ﻿<muxc:Page x:Class="BiliWpf.Client.Pages.AccountPage"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-           xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
            xmlns:pages="clr-namespace:BiliWpf.Client.Pages"
            xmlns:muxc="http://schemas.modernwpf.com/2019"
            xmlns:controls="clr-namespace:BiliWpf.Controls;assembly=BilibiliWPF.Controls"
-      mc:Ignorable="d" 
-      d:DesignHeight="720" d:DesignWidth="1032"
-      Title="AccountPage">
-
+           xmlns:helpers="clr-namespace:BiliWpf.Controls.Helpers;assembly=BilibiliWPF.Controls"
+           mc:Ignorable="d"
+           d:DesignHeight="720"
+           d:DesignWidth="1032"
+           Title="AccountPage">
+    <Page.Resources>
+        <Style x:Key="MiniCardBorderStyle"
+               TargetType="Border">
+            <Setter Property="CornerRadius"
+                    Value="5" />
+            <Setter Property="Background"
+                    Value="{DynamicResource SystemControlBackgroundListLowBrush}" />
+            <Setter Property="Padding"
+                    Value="5,3" />
+            <Setter Property="SnapsToDevicePixels"
+                    Value="True" />
+        </Style>
+        <Style x:Key="ElementCardStyle" TargetType="HeaderedContentControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="HeaderedContentControl">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{TemplateBinding pages:AccountPage.CardTitle}"
+                                       FontSize="16" 
+                                       VerticalAlignment="Center"
+                                       Margin="5,0,0,3"/>
+                            <TextBlock Text="{TemplateBinding pages:AccountPage.CardCount}"
+                                       Grid.Column="1"
+                                       VerticalAlignment="Center"
+                                       Margin="10,0"
+                                       FontSize="14"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                            <muxc:HyperlinkButton Content="查看更多 >" 
+                                                  FontSize="12"
+                                                  Grid.Column="2"
+                                                  HorizontalAlignment="Right"
+                                                  Margin="10,0"/>
+                            <ContentPresenter Content="{TemplateBinding Content}" 
+                                              Grid.Row="1"
+                                              Grid.ColumnSpan="3"/>
+                        </Grid>
+                    </ControlTemplate>
+                    
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background"
+                    Value="{DynamicResource SystemControlForegroundBaseMediumHighBrush}" />
+            <Setter Property="FontSize"
+                    Value="12" />
+            <Setter Property="FontFamily"
+                    Value="Microsoft Yahei" />
+        </Style>
+    </Page.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <controls:AnimatedScrollViewer Grid.RowSpan="2"
                                        VerticalScrollBarVisibility="Auto">
-            <muxc:SimpleStackPanel>
-                <Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                
+                <Grid x:Name="TopGrid"
+                      Grid.ColumnSpan="2">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="50" />
                     </Grid.RowDefinitions>
 
-                    <Image x:Name="SpaceTopPhoto"
-                           VerticalAlignment="Top"
-                           Stretch="Uniform"
-                           Height="{Binding RelativeSource={RelativeSource Self}, Path=ActualWidth,
+                    <Border Height="{Binding ActualWidth, ElementName=TopGrid, Mode=OneWay,
                                 Converter={StaticResource MathConvert},
-                                ConverterParameter=(@VALUE*.3)}"/>
-                    <muxc:ThemeShadowChrome Depth="8"
-                                            Margin="20,0"
-                                            Grid.RowSpan="2"
-                                            VerticalAlignment="Bottom">
-                        <Grid Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
-                              Height="100">
-                            <Image Margin="8"
+                                ConverterParameter=(@VALUE*.4)}"
+                            VerticalAlignment="Top"
+                            ClipToBounds="True"
+                            Background="{DynamicResource SystemControlBackgroundBaseLowBrush}">
+                        <Image x:Name="TopPhotoComponent"
+                               Stretch="UniformToFill"
+                               VerticalAlignment="Center" />
+                    </Border>
+                    <Grid Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+                          Height="100"
+                          Margin="40,0"
+                          Grid.RowSpan="2"
+                          VerticalAlignment="Bottom">
+                        <Grid.Effect>
+                            <DropShadowEffect BlurRadius="12"
+                                              Color="{DynamicResource SystemBaseHighColor}"
+                                              Opacity="0.21"
+                                              Direction="270"
+                                              ShadowDepth="4"/>
+                        </Grid.Effect>
+                        <Border Margin="14"
+                                Height="72"
+                                Width="72"
+                                CornerRadius="36"
+                                HorizontalAlignment="Left"
+                                Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"/>
+                        <Image Margin="14"
+                               HorizontalAlignment="Left"
+                               Height="72"
+                               Width="72"
+                               helpers:EllipseClipHelper.IsClipping="True"
+                               x:Name="FaceComponent" />
+                        <muxc:SimpleStackPanel Orientation="Horizontal"
+                                               Spacing="10"
+                                               Margin="105,20,0,0"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Top">
+                            <TextBlock x:Name="NameText"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}"
+                                       FontWeight="Bold"
+                                       MaxWidth="200"
+                                       FontSize="18" />
+                            <Border Style="{StaticResource MiniCardBorderStyle}">
+                                <TextBlock x:Name="UidText"
+                                           FontSize="12" 
+                                           MinWidth="60"/>
+                            </Border>
+                            <Border Style="{StaticResource MiniCardBorderStyle}"
+                                    Background="#F45A8D"
+                                    x:Name="BigVipElement"
+                                    MinWidth="40">
+                                <TextBlock x:Name="BigVipText"
+                                           Foreground="White" />
+                            </Border>
+                            <TextBlock x:Name="SexText"
+                                       FontSize="14"
+                                       FontWeight="Bold" />
+                        </muxc:SimpleStackPanel>
+                        <TextBlock x:Name="SignText"
+                                   Margin="105,55,0,0"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                                    HorizontalAlignment="Left"
-                                   Height="100"
-                                   Width="100"/>
-                        </Grid>
-                    </muxc:ThemeShadowChrome>
+                                   VerticalAlignment="Top"
+                                   FontSize="12"
+                                   MaxWidth="200" />
+                        <Button Style="{StaticResource MahAppButtonStyle}"
+                                Width="160"
+                                Height="36"
+                                Content="关注用户"
+                                HorizontalAlignment="Right"
+                                Margin="15,15"
+                                VerticalAlignment="Bottom" />
+                    </Grid>
                 </Grid>
-            </muxc:SimpleStackPanel>
+                <Border Padding="10"
+                        Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Margin="40,15,40,0"
+                        x:Name="LiveRoomElement">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="12"
+                                          Color="{DynamicResource SystemBaseHighColor}"
+                                          Opacity="0.21"
+                                          Direction="270"
+                                          ShadowDepth="4" />
+                    </Border.Effect>
+                    <muxc:SimpleStackPanel Orientation="Horizontal">
+                        <TextBlock x:Name="LiveRoomText"/>
+                    </muxc:SimpleStackPanel>
+                </Border>
+                <muxc:SimpleStackPanel Grid.Row="2"
+                                       Margin="40,15,0,0"
+                                       Spacing="15">
+                    <Border Style="{StaticResource ShadowDepthBorderStyle}"
+                            x:Name="ArchiveElement">
+                        <HeaderedContentControl Style="{StaticResource ElementCardStyle}"
+                                                x:Name="ArchiveContent">
+                            <muxc:ItemsRepeater>
+                                
+                            </muxc:ItemsRepeater>
+                        </HeaderedContentControl>
+                    </Border>
+                    <Border Style="{StaticResource ShadowDepthBorderStyle}"
+                            x:Name="SeasonElement">
+                        <HeaderedContentControl Style="{StaticResource ElementCardStyle}"
+                                                x:Name="SeasonContent">
+                            
+                        </HeaderedContentControl>
+                    </Border>
+                </muxc:SimpleStackPanel>
+                <muxc:SimpleStackPanel Grid.Row="2"
+                                       Grid.Column="1"
+                                       Margin="15,15,40,0"
+                                       Spacing="15">
+                    <Border Style="{StaticResource ShadowDepthBorderStyle}"
+                            x:Name="ArticleElement">
+                        <HeaderedContentControl Style="{StaticResource ElementCardStyle}"
+                                                x:Name="ArticleContent">
+                            
+                        </HeaderedContentControl>
+                    </Border>
+                </muxc:SimpleStackPanel>
+            </Grid>
         </controls:AnimatedScrollViewer>
         <muxc:ThemeShadowChrome Depth="16"
                                 Visibility="Collapsed"

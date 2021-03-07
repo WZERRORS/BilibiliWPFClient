@@ -8,9 +8,15 @@ namespace BiliWpf.Sevices.Models
 {
     public class Vip
     {
-        public int type { get; set; }
-        public int status { get; set; }
-        public string due_date { get; set; }
+        public int vipType { get; set; }
+        public int vipStatus { get; set; }
+        public string vipDueDate { get; set; }
+        public VipLabel label { get; set; }
+        public class VipLabel
+        {
+            public string text { get; set; }
+            public string label_theme { get; set; }
+        }
     }
     public class Pendant
     {
