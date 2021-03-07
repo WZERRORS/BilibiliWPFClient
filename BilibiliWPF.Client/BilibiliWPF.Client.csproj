@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <None Remove="Assets\bilibili-logo-large.png" />
+    <None Remove="Assets\empty.png" />
     <None Remove="Assets\login-frame-back-trans.png" />
   </ItemGroup>
 
@@ -40,6 +41,9 @@
 
   <ItemGroup>
     <Resource Include="Assets\bilibili-logo-large.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\empty.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\login-frame-back-trans.png">

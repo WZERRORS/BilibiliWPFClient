@@ -7,68 +7,12 @@
            xmlns:muxc="http://schemas.modernwpf.com/2019"
            xmlns:controls="clr-namespace:BiliWpf.Controls;assembly=BilibiliWPF.Controls"
            xmlns:helpers="clr-namespace:BiliWpf.Controls.Helpers;assembly=BilibiliWPF.Controls"
+           xmlns:usercontrols="clr-namespace:BiliWpf.Client.UserControls"
            mc:Ignorable="d"
            d:DesignHeight="720"
            d:DesignWidth="1032"
            Title="AccountPage">
-    <Page.Resources>
-        <Style x:Key="MiniCardBorderStyle"
-               TargetType="Border">
-            <Setter Property="CornerRadius"
-                    Value="5" />
-            <Setter Property="Background"
-                    Value="{DynamicResource SystemControlBackgroundListLowBrush}" />
-            <Setter Property="Padding"
-                    Value="5,3" />
-            <Setter Property="SnapsToDevicePixels"
-                    Value="True" />
-        </Style>
-        <Style x:Key="ElementCardStyle" TargetType="HeaderedContentControl">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="HeaderedContentControl">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock Text="{TemplateBinding pages:AccountPage.CardTitle}"
-                                       FontSize="16" 
-                                       VerticalAlignment="Center"
-                                       Margin="5,0,0,3"/>
-                            <TextBlock Text="{TemplateBinding pages:AccountPage.CardCount}"
-                                       Grid.Column="1"
-                                       VerticalAlignment="Center"
-                                       Margin="10,0"
-                                       FontSize="14"
-                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
-                            <muxc:HyperlinkButton Content="查看更多 >" 
-                                                  FontSize="12"
-                                                  Grid.Column="2"
-                                                  HorizontalAlignment="Right"
-                                                  Margin="10,0"/>
-                            <ContentPresenter Content="{TemplateBinding Content}" 
-                                              Grid.Row="1"
-                                              Grid.ColumnSpan="3"/>
-                        </Grid>
-                    </ControlTemplate>
-                    
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Background"
-                    Value="{DynamicResource SystemControlForegroundBaseMediumHighBrush}" />
-            <Setter Property="FontSize"
-                    Value="12" />
-            <Setter Property="FontFamily"
-                    Value="Microsoft Yahei" />
-        </Style>
-    </Page.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
@@ -191,22 +135,9 @@
                 <muxc:SimpleStackPanel Grid.Row="2"
                                        Margin="40,15,0,0"
                                        Spacing="15">
-                    <Border Style="{StaticResource ShadowDepthBorderStyle}"
-                            x:Name="ArchiveElement">
-                        <HeaderedContentControl Style="{StaticResource ElementCardStyle}"
-                                                x:Name="ArchiveContent">
-                            <muxc:ItemsRepeater>
-                                
-                            </muxc:ItemsRepeater>
-                        </HeaderedContentControl>
-                    </Border>
-                    <Border Style="{StaticResource ShadowDepthBorderStyle}"
-                            x:Name="SeasonElement">
-                        <HeaderedContentControl Style="{StaticResource ElementCardStyle}"
-                                                x:Name="SeasonContent">
-                            
-                        </HeaderedContentControl>
-                    </Border>
+                    <usercontrols:ArchiveResponseCard x:Name="ArchiveElement" />
+                    <usercontrols:SeasonResponseCard x:Name="SeasonElement" />
+
                 </muxc:SimpleStackPanel>
                 <muxc:SimpleStackPanel Grid.Row="2"
                                        Grid.Column="1"

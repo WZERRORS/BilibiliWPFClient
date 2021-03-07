@@ -15,4 +15,16 @@
         <Setter Property="Background"
                 Value="{DynamicResource SystemControlBackgroundAltHighBrush}" />
     </Style>
+
+    <Style x:Key="MiniCardBorderStyle"
+           TargetType="Border">
+        <Setter Property="CornerRadius"
+                Value="5" />
+        <Setter Property="Background"
+                Value="{DynamicResource SystemControlBackgroundListLowBrush}" />
+        <Setter Property="Padding"
+                Value="5,3" />
+        <Setter Property="SnapsToDevicePixels"
+                Value="True" />
+    </Style>
 </ResourceDictionary>

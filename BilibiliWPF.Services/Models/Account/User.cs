@@ -14,6 +14,19 @@ namespace BiliWpf.Services.Models.Account
         public ItemArray<VideoSimple> season { get; set; }
         public ItemArray<FansDress> fans_dress { get; set; }
         public ItemArray<FavouriteCollection> favourite2 { get; set; }
+        public TabClass tab { get; set; }
+        public class TabClass
+        {
+            public bool archive { get; set; }
+            public bool article { get; set; }
+            public bool album { get; set; }
+            public bool favourite { get; set; }
+            public bool bangumi { get; set; }
+            public bool coin { get; set; }
+            public bool like { get; set; }
+            public bool dynamic { get; set; }
+            public bool sub_comic { get; set; }
+        }
     }
 
     public class SpaceImages

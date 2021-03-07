@@ -1,4 +1,5 @@
-﻿using BiliWpf.Services;
+﻿using BiliWpf.Controls.Helpers;
+using BiliWpf.Services;
 using BiliWpf.Services.Models.Account;
 using BiliWpf.Sevices.Models;
 using System;
@@ -46,6 +47,8 @@ namespace BiliWpf.Client.Pages
                     SignText.Text = response.card.sign;
                     UidText.Text = $"Uid:{response.card.mid}";
 
+                    var tabClass = response.tab;
+
                     {
                         switch(response.card.sex)
                         {
@@ -73,23 +76,33 @@ namespace BiliWpf.Client.Pages
 
                     {
                         var archive = response.archive;
-                        ArchiveElement.Visibility = archive.count > 0 ? Visibility.Visible : Visibility.Collapsed;
+                        if (tabClass.archive)
+                        {
+                            ArchiveElement.Init(response.archive, response.card.mid);
+                        }
+                        else
+                            ArchiveElement.Visibility = Visibility.Collapsed;
                     }
 
                     {
                         var article = response.article;
-                        SetCardCount(ArticleElement, article.count.ToString());
+                        if (tabClass.article)
+                        {
+
+                        }
+                        else
+                            ArticleElement.Visibility = Visibility.Collapsed;
                     }
 
                     {
                         var season = response.season;
-                        SetCardCount(SeasonContent, season.count.ToString());
+                        if (tabClass.bangumi)
+                        {
+                            
+                        }
+                        else
+                            SeasonElement.Visibility = Visibility.Collapsed;
                     }
-
-                    SetCardTitle(ArchiveContent, "用户投稿");
-                    SetCardTitle(SeasonContent, "追番");
-                    SetCardTitle(ArticleContent, "专栏");
-
                 });
 
                 if(response.images != null)
@@ -104,21 +117,5 @@ namespace BiliWpf.Client.Pages
             
             
         }
-
-        #region
-        public static readonly DependencyProperty CardTitleProperty
-            = DependencyProperty.RegisterAttached("CardTitle", typeof(string), typeof(AccountPage), new PropertyMetadata(""));
-
-        public static string GetCardTitle(DependencyObject element) => (string)element.GetValue(CardTitleProperty);
-        public static void SetCardTitle(DependencyObject element, string value) => element.SetValue(CardTitleProperty, value);
-        #endregion
-
-        #region
-        public static readonly DependencyProperty CardCountProperty
-            = DependencyProperty.RegisterAttached("CardCount", typeof(string), typeof(AccountPage), new PropertyMetadata(""));
-
-        public static string GetCardCount(DependencyObject element) => (string)element.GetValue(CardCountProperty);
-        public static void SetCardCount(DependencyObject element, string value) => element.SetValue(CardCountProperty, value);
-        #endregion
     }
 }

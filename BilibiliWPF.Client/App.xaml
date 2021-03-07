@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="/BilibiliWPF.Controls;component/ResourceDictionaries/Fonts.xaml" />
                 <ResourceDictionary Source="/BilibiliWPF.Controls;component/ResourceDictionaries/Borders.xaml" />
                 <ResourceDictionary Source="/BilibiliWPF.Controls;component/ResourceDictionaries/Convertors.xaml" />
+                <ResourceDictionary Source="/BilibiliWPF.Controls;component/ResourceDictionaries/HeaderedContentControl.xaml" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
