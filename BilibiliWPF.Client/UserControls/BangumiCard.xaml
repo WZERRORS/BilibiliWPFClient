@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="BiliWpf.Client.UserControls.BangumiCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:usercontrols="clr-namespace:BiliWpf.Client.UserControls"
+             xmlns:muxc="http://schemas.modernwpf.com/2019"
+             mc:Ignorable="d" d:DesignWidth="240"
+             TextOptions.TextRenderingMode="ClearType">
+    <Border CornerRadius="0"
+            Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+            MouseEnter="Card_MouseEnter"
+            MouseLeave="Card_MouseLeave"
+            Cursor="Hand">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="2"
+                              Direction="270"
+                              ShadowDepth="0"
+                              Opacity="0.3"
+                              x:Name="CardShadow" />
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="75" />
+            </Grid.RowDefinitions>
+
+            <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                    VerticalAlignment="Top"
+                    CornerRadius="5"
+                    ClipToBounds="True"
+                    x:Name="CoverElement">
+                <Image Height="{Binding ActualWidth, ElementName=CoverElement, Mode=OneWay,
+                                Converter={StaticResource MathConvert},
+                                ConverterParameter=(@VALUE*1.33)}"
+                       x:Name="CoverPicture"
+                       Stretch="Fill" />
+            </Border>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock FontSize="12"
+                           FontFamily="Microsoft Yahei UI"
+                           Foreground="{DynamicResource SystemControlForegroundBaseMediumHighBrush}"
+                           Margin="8,8,8,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           x:Name="NameText" 
+                           TextWrapping="Wrap"
+                           SnapsToDevicePixels="True"/>
+                <TextBlock FontSize="12"
+                           FontFamily="SimSum"
+                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                           Margin="8,0,8,8"
+                           Grid.Row="1"
+                           VerticalAlignment="Bottom"
+                           HorizontalAlignment="Left"
+                           x:Name="NewEpText"
+                           SnapsToDevicePixels="True"/>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

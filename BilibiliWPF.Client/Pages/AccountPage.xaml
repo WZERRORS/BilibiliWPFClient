@@ -11,8 +11,33 @@
            mc:Ignorable="d"
            d:DesignHeight="720"
            d:DesignWidth="1032"
-           Title="AccountPage">
-
+           Title="AccountPage"
+           TextOptions.TextFormattingMode="Display">
+    <muxc:Page.Resources>
+        <Style x:Key="RelDesTextStyle"
+               TargetType="TextBlock">
+            <Setter Property="Foreground"
+                    Value="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+            <Setter Property="FontSize"
+                    Value="12" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Center" />
+            <Setter Property="VerticalAlignment"
+                    Value="Bottom" />
+        </Style>
+        <Style x:Key="RelValTextStyle"
+               TargetType="TextBlock">
+            <Setter Property="Foreground"
+                    Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+            <Setter Property="FontSize"
+                    Value="12" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Center" />
+            <Setter Property="VerticalAlignment"
+                    Value="Top" />
+        </Style>
+    </muxc:Page.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
@@ -20,7 +45,7 @@
         </Grid.RowDefinitions>
 
         <controls:AnimatedScrollViewer Grid.RowSpan="2"
-                                       VerticalScrollBarVisibility="Auto">
+                                       VerticalScrollBarVisibility="Hidden">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -28,8 +53,8 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="315" />
                 </Grid.ColumnDefinitions>
                 
                 <Grid x:Name="TopGrid"
@@ -86,39 +111,99 @@
                             <Border Style="{StaticResource MiniCardBorderStyle}">
                                 <TextBlock x:Name="UidText"
                                            FontSize="12" 
-                                           MinWidth="60"/>
+                                           MinWidth="60"
+                                           FontFamily="Microsoft Yahei"
+                                           SnapsToDevicePixels="True"/>
                             </Border>
                             <Border Style="{StaticResource MiniCardBorderStyle}"
                                     Background="#F45A8D"
                                     x:Name="BigVipElement"
                                     MinWidth="40">
                                 <TextBlock x:Name="BigVipText"
-                                           Foreground="White" />
+                                           Foreground="White"
+                                           FontFamily="Microsoft Yahei"/>
                             </Border>
+                            <Viewbox Width="30"
+                                     Height="20"
+                                     Margin="0,-10">
+                                <Path x:Name="LevelPath"/>
+                            </Viewbox>
                             <TextBlock x:Name="SexText"
                                        FontSize="14"
                                        FontWeight="Bold" />
                         </muxc:SimpleStackPanel>
                         <TextBlock x:Name="SignText"
-                                   Margin="105,55,0,0"
+                                   Margin="105,50,0,0"
                                    Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Top"
                                    FontSize="12"
                                    MaxWidth="200" />
+                        <TextBlock x:Name="ExpText"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Bottom" 
+                                   Margin="0,0,195,25"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumHighBrush}"/>
+                        <muxc:ProgressBar Margin="105,0,190,15"
+                                          HorizontalAlignment="Stretch" 
+                                          VerticalAlignment="Bottom" 
+                                          x:Name="ExpBar"/>
+                        <Grid Width="190"
+                              Height="30"
+                              HorizontalAlignment="Right"
+                              VerticalAlignment="Top"
+                              Margin="0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Style="{StaticResource RelDesTextStyle}"
+                                       Text="粉丝" />
+                            <TextBlock Style="{StaticResource RelDesTextStyle}"
+                                       Text="关注" 
+                                       Grid.Column="1" />
+                            <TextBlock Style="{StaticResource RelDesTextStyle}"
+                                       Text="获赞"
+                                       Grid.Column="2"/>
+
+                            <TextBlock Style="{StaticResource RelValTextStyle}"
+                                       x:Name="FansText"/>
+                            <TextBlock Style="{StaticResource RelValTextStyle}"
+                                       x:Name="FollowText"
+                                       Grid.Column="1" />
+                            <TextBlock Style="{StaticResource RelValTextStyle}"
+                                       x:Name="LikeText"
+                                       Grid.Column="2" />
+
+                            <Border Width="1"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,3"
+                                    Background="{DynamicResource SystemControlBackgroundBaseMediumLowBrush}"
+                                    SnapsToDevicePixels="True"
+                                    Grid.Column="1"/>
+                            <Border Width="1"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,3"
+                                    Background="{DynamicResource SystemControlBackgroundBaseMediumLowBrush}"
+                                    SnapsToDevicePixels="True" 
+                                    Grid.Column="1"/>
+                        </Grid>
                         <Button Style="{StaticResource MahAppButtonStyle}"
                                 Width="160"
                                 Height="36"
-                                Content="关注用户"
+                                x:Name="FollowUserButton"
                                 HorizontalAlignment="Right"
-                                Margin="15,15"
-                                VerticalAlignment="Bottom" />
+                                VerticalAlignment="Bottom"
+                                Margin="15,15" />
                     </Grid>
                 </Grid>
                 <Border Padding="10"
                         Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
                         Grid.Row="1"
                         Grid.ColumnSpan="2"
+                        MinHeight="50"
                         Margin="40,15,40,0"
                         x:Name="LiveRoomElement">
                     <Border.Effect>
@@ -133,15 +218,16 @@
                     </muxc:SimpleStackPanel>
                 </Border>
                 <muxc:SimpleStackPanel Grid.Row="2"
-                                       Margin="40,15,0,0"
+                                       Margin="40,15,0,20"
                                        Spacing="15">
-                    <usercontrols:ArchiveResponseCard x:Name="ArchiveElement" />
-                    <usercontrols:SeasonResponseCard x:Name="SeasonElement" />
-
+                    <usercontrols:ArchiveResponseCard x:Name="ArchiveElement" 
+                                                      MinHeight="200"/>
+                    <usercontrols:BangumiResponseCard x:Name="SeasonElement" 
+                                                     MinHeight="300"/>
                 </muxc:SimpleStackPanel>
                 <muxc:SimpleStackPanel Grid.Row="2"
                                        Grid.Column="1"
-                                       Margin="15,15,40,0"
+                                       Margin="15,15,40,20"
                                        Spacing="15">
                     <Border Style="{StaticResource ShadowDepthBorderStyle}"
                             x:Name="ArticleElement">

@@ -30,7 +30,15 @@ namespace BiliWpf.Services.Models.Anime
         }
     }
 
-
+    public class BangumiResponse
+    {
+        public string title { get; set; }
+        public string cover { get; set; }
+        public string param { get; set; }
+        public string newest_ep_index { get; set; }
+        public int is_started { get; set; }
+        public int finish { get; set; }
+    }
 
     public class BangumiDetail
     {
@@ -124,8 +132,6 @@ namespace BiliWpf.Services.Models.Anime
         public int series_id { get; set; }
         public string series_title { get; set; }
     }
-
-
 
     public class UserStatus
     {

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BiliWpf.Client.UserControls.ArchiveResponseCard"
+﻿<UserControl x:Class="BiliWpf.Client.UserControls.BangumiResponseCard"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,14 +8,14 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <DataTemplate x:Key="VideoCardTemplate">
-            <usercontrols:SmallVideoCard />
+        <DataTemplate x:Key="BangumiCardTemplate">
+            <usercontrols:BangumiCard Data="{Binding}"/>
         </DataTemplate>
     </UserControl.Resources>
     <Border Style="{StaticResource ShadowDepthBorderStyle}"
-            x:Name="ArchiveElement">
+            x:Name="BangumiElement">
         <HeaderedContentControl Style="{StaticResource ElementCardStyle}"
-                                x:Name="ArchiveContent">
+                                x:Name="BangumiContent">
             <Grid>
                 <Image Visibility="Collapsed"
                        Source="/Assets/empty.png"
@@ -33,12 +33,14 @@
                             </Style>
                         </ScrollViewer.Style>
                         <muxc:ItemsRepeater x:Name="UniformGridLayoutRepeater"
-                                            ItemTemplate="{StaticResource VideoCardTemplate}">
+                                            ItemTemplate="{StaticResource BangumiCardTemplate}"
+                                            Margin="10">
                             <muxc:ItemsRepeater.Layout>
-                                <muxc:UniformGridLayout MinItemWidth="240"
-                                                        MinColumnSpacing="24"
+                                <muxc:UniformGridLayout MinItemWidth="140"
+                                                        MinColumnSpacing="15"
+                                                        MinRowSpacing="15"
                                                         ItemsStretch="Fill"
-                                                        ItemsJustification="Start" />
+                                                        ItemsJustification="SpaceBetween" />
                             </muxc:ItemsRepeater.Layout>
                         </muxc:ItemsRepeater>
                     </ScrollViewer>

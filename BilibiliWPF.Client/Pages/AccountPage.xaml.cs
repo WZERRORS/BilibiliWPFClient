@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -59,6 +60,23 @@ namespace BiliWpf.Client.Pages
                     }
 
                     {
+                        var level = response.card.level_info;
+                        LevelPath.Fill = FindResource($"Level{level.current_level}Color") as SolidColorBrush;
+                        LevelPath.Data = FindResource($"Level{level.current_level}Icon") as StreamGeometry;
+                        ExpText.Text = $"{level.current_exp}/{level.next_exp}";
+                        if (Regex.Match(level.next_exp, "[0-9](1-5)").Success)
+                            ExpBar.Value = level.current_exp * 1.0d / int.Parse(level.next_exp);
+                        else
+                            ExpBar.ShowError = true;
+                    }
+
+                    {
+                        FansText.Text = response.card.fans.ToString();
+                        FollowText.Text = response.card.attention.ToString();
+                        LikeText.Text = response.card.likes.like_num.ToString();
+                    }
+
+                    {
                         Vip vipData = response.card.vip;
                         if (vipData.vipStatus == 1)
                         {
@@ -98,11 +116,13 @@ namespace BiliWpf.Client.Pages
                         var season = response.season;
                         if (tabClass.bangumi)
                         {
-                            
+                            SeasonElement.Init(season.item, response.card.mid);
                         }
                         else
                             SeasonElement.Visibility = Visibility.Collapsed;
                     }
+
+                    FollowUserButton.SetResourceReference(ContentProperty, "User.FollowUser");
                 });
 
                 if(response.images != null)

@@ -1,4 +1,5 @@
-﻿using BiliWpf.Services.Models.Article;
+﻿using BiliWpf.Services.Models.Anime;
+using BiliWpf.Services.Models.Article;
 using BiliWpf.Sevices.Models;
 using System.Collections.Generic;
 
@@ -11,7 +12,7 @@ namespace BiliWpf.Services.Models.Account
         public ArticleResponse article { get; set; }
         public SpaceImages images { get; set; }
         public LiveRoom live { get; set; }
-        public ItemArray<VideoSimple> season { get; set; }
+        public ItemArray<BangumiResponse> season { get; set; }
         public ItemArray<FansDress> fans_dress { get; set; }
         public ItemArray<FavouriteCollection> favourite2 { get; set; }
         public TabClass tab { get; set; }
